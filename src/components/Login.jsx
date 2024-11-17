@@ -1,20 +1,41 @@
 import { useState } from "react";
 import axios from 'axios';
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 
 const Login = () => {
 
-    const [emailId, setEmailId] = useState("");
-    const [password, setPassword] = useState(""); 
+    const [emailId, setEmailId] = useState("dhoni@test.com");
+    const [password, setPassword] = useState("Dhoni@123"); 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try{
-            const result = await axios.post("http://localhost:7777/login", {
+            const result = await axios.post(BASE_URL + "/login", {
                 emailId,
                 password
             }, {withCredentials: true})
+
+            // save data to redux store
+            dispatch(addUser(result.data));
+
+            // navigate to / route
+            return navigate("/");
         }catch(err){
             console.log("Errrorrrr", err.message)
+        }
+    }
+
+    const handleReset = async () => {
+        try{
+            setEmailId("");
+            setPassword(""); 
+        }catch(err){
+            console.log("Error resetting form data.");
         }
     }
 
@@ -40,7 +61,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}/>
                 </label>
                 <div className="card-actions justify-center">
-                    <button className="btn btn-primary mr-10 mt-5">Reset</button>
+                    <button className="btn btn-primary mr-10 mt-5" onClick={() => handleReset()}>Reset</button>
                     <button className="btn btn-primary mt-5" onClick={() => handleLogin()}>Login</button>
                 </div>
 
