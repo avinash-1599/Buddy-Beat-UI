@@ -10,6 +10,7 @@ const Login = () => {
 
     const [emailId, setEmailId] = useState("dhoni@test.com");
     const [password, setPassword] = useState("Dhoni@123"); 
+    const [error, setError] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -19,14 +20,16 @@ const Login = () => {
                 emailId,
                 password
             }, {withCredentials: true})
+            console.log("resssss", result.data.data);
 
             // save data to redux store
-            dispatch(addUser(result.data));
+            dispatch(addUser(result.data.data));
 
             // navigate to / route
             return navigate("/");
         }catch(err){
-            console.log("Errrorrrr", err.message)
+            setError(err?.response?.data);
+            //console.log("Errrorrrr", err.message)
         }
     }
 
@@ -60,6 +63,7 @@ const Login = () => {
                 <input type="text" value={password} className="input input-bordered w-full max-w-xs" 
                 onChange={(e) => setPassword(e.target.value)}/>
                 </label>
+                <p className="text-red-500">{error}</p>
                 <div className="card-actions justify-center">
                     <button className="btn btn-primary mr-10 mt-5" onClick={() => handleReset()}>Reset</button>
                     <button className="btn btn-primary mt-5" onClick={() => handleLogin()}>Login</button>

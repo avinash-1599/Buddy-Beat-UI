@@ -1,35 +1,51 @@
-import { useSelector } from "react-redux";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { BASE_URL } from "../utils/constants";
+import { removeUser } from "../utils/userSlice";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
 // subscribe to the user store using useSelector hook
     const user = useSelector(store => store.user);
     console.log("useeeeeer", user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+      try{
+        await axios.post(BASE_URL+'/logout', {}, {withCredentials: true});
+        dispatch(removeUser());
+        return navigate('/login');
+      }catch(err){
+        console.log("Error logging out",err);
+      }
+    }
 
     return (<h1 className="text-3xl font-bold">
     <div className="navbar bg-base-300">
 <div className="flex-1">
-  <a className="btn btn-ghost text-xl">DevTinder</a>
+  <Link to='/' className="btn btn-ghost text-xl">DevTinder</Link>
 </div>
 <div className="flex-none gap-2">
   {user && (
   <div className="dropdown dropdown-end mx-5 flex">
-    <p className="px-4 text-sm text-blue-500 mt-2">Welcome, {user.data.firstName} </p>
+    <p className="px-4 text-sm text-blue-500 mt-2">Welcome, {user.firstName} </p>
     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
       <div className="w-10 rounded-full">
-        <img alt="user photo" src={user.data.photoUrl || '../public/dhoni.png'} />
+        <img alt="user photo" src={user.photoUrl || '../public/dhoni.png'} />
       </div>
     </div>
     <ul
       tabIndex={0}
       className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
       <li>
-        <a className="justify-between">
+        <Link to='/profile' className="justify-between">
           Profile
           <span className="badge">New</span>
-        </a>
+        </Link>
       </li>
-      <li><a>Settings</a></li>
-      <li><a>Logout</a></li>
+      <li><Link to='/connections'>Connections</Link></li>
+      <li><a onClick={() => handleLogout()}>Logout</a></li>
     </ul>
   </div>
   )}

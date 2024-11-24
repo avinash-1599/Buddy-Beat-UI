@@ -5,6 +5,7 @@ import Profile from './components/Profile';
 import Feed from './components/Feed';
 import {Provider} from 'react-redux';
 import appStore from './utils/appStore';
+import Connections from './components/Connections';
 
 
 export default function App() {
@@ -17,6 +18,8 @@ export default function App() {
           <Route path='/' element={<Feed></Feed>} />
           <Route path='/login' element={<Login></Login>} />
           <Route path='/profile' element={<Profile></Profile>} />
+          <Route path='/connections' element={<Connections></Connections>} />
+          <Route path='/requests' element={<Profile></Profile>} />
         </Route>
       </Routes>
     </BrowserRouter>

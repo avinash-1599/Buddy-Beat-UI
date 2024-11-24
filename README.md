@@ -19,6 +19,10 @@
 - login and check if data is coming properly in redux store
 - NavBar should update as soon as user logins
 - refactor code to store constants
+- we should not access other routes without login
+- if token is not present, redirect to login page
+- make logout functionality in ui
+- make profile section in ui
 
 
 
