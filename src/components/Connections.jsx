@@ -11,9 +11,13 @@ const Connections = () => {
     const dispatch = useDispatch();
 
     const fetchConnections = async () => {
-        const res = await axios.get(BASE_URL + '/user/connections', {withCredentials: true});
+        try{
+            const res = await axios.get(BASE_URL + '/user/connections', {withCredentials: true});
 
-        dispatch(addConnection(res.data.data));
+            dispatch(addConnection(res.data.data));
+        }catch(err){
+            console.log(err.message);
+        }
     }
 
     useEffect(() => {
@@ -22,17 +26,17 @@ const Connections = () => {
 
     if(!connections) return;
 
-    if(connections.length === 0) return <h1>No Connections Found</h1>
+    if(connections.length === 0) return <h1 className="flex justify-center my-10">No Connections Found</h1>
 
     return (
         <div className="text-center my-10">
             <h1 className="text-bold text-3xl"><u>My Connections</u></h1>
             {connections.map(connection => {
                 console.log('check', connection)
-                const {firstName, lastName, age, gender, about, photoUrl} = connection;
+                const {_id, firstName, lastName, age, gender, about, photoUrl} = connection;
 
                 return (
-                    <div className="flex m-4 p-4 rounded-lg bg-base-300 w-1/2 mx-auto">
+                    <div key={_id} className="flex m-4 p-4 rounded-lg bg-base-300 w-1/2 mx-auto">
                         <div>
                         <img className= 'w-20 h-20 mx-5 rounded-full' src={photoUrl} alt="photo" />
                         </div>

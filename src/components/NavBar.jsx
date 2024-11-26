@@ -32,7 +32,7 @@ const NavBar = () => {
     <p className="px-4 text-sm text-blue-500 mt-2">Welcome, {user.firstName} </p>
     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
       <div className="w-10 rounded-full">
-        <img alt="user photo" src={user.photoUrl || '../public/dhoni.png'} />
+        <img alt="user photo" src={user.photoUrl} />
       </div>
     </div>
     <ul
@@ -45,6 +45,7 @@ const NavBar = () => {
         </Link>
       </li>
       <li><Link to='/connections'>Connections</Link></li>
+      <li><Link to='/requests'>Requests</Link></li>
       <li><a onClick={() => handleLogout()}>Logout</a></li>
     </ul>
   </div>

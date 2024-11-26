@@ -9,6 +9,7 @@
 - Create BrowserRouter > Routes > Route='/' Body RouteChildren
 - Create an outlet in Body component
 - Create a footer
+- create signup page component
 - create login page component
 - install axios
 - implement CORS in backend - add this middleware with origin and credentials configuration
@@ -23,6 +24,11 @@
 - if token is not present, redirect to login page
 - make logout functionality in ui
 - make profile section in ui
+- show toast msg on profile update
+- show connections page
+- show connection request page
+- accept/reject connection request
+- show ignore/interest of users functionality from feed
 
 
 
