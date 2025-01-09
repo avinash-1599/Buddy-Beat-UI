@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import NavBar from "./NavBar"
+import NavBar from "./NavBar";
 import Footer from "./Footer";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
@@ -8,7 +8,6 @@ import { addUser } from "../utils/userSlice";
 import { useEffect } from "react";
 
 const Body = () => {
-
     // on page refresh, user should be logged in
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -17,12 +16,12 @@ const Body = () => {
 
     const fetchUser = async () => {
         if(userData) return;
-        try{
+        try {
             const res = await axios.get(BASE_URL+'/profile/view', {withCredentials: true});
-            dispatch(addUser(res.data.data)); 
-        }catch(err){
-            if(err.status === 401){
-                navigate('/login')
+            dispatch(addUser(res.data.data));
+        } catch(err) {
+            if(err.status === 401) {
+                navigate('/login');
             }
             console.log(err);
         }
@@ -30,16 +29,19 @@ const Body = () => {
 
     useEffect(() => {
         fetchUser();
-    }, [])
-
+    }, []);
 
     return (
-        <div>
+        <div className="min-h-screen flex flex-col">
             <NavBar />
-            <Outlet />
-            <Footer></Footer>
+            <main className="flex-grow bg-cover bg-center" style={{ backgroundImage: "url('../public/bg-img.png')" }}>
+                <div className="bg-gray-800 bg-opacity-30 p-8 min-h-screen">
+                    <Outlet />
+                </div>
+            </main>
+            <Footer />
         </div>
-    )
+    );
 }
 
 export default Body;

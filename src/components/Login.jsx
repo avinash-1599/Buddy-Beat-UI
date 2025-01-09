@@ -5,118 +5,82 @@ import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
-
 const Login = () => {
-
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [emailId, setEmailId] = useState("dhoni@test.com");
-    const [password, setPassword] = useState("Dhoni@123"); 
-    const [isLoginPage, setIsLoginPage] = useState(true);   // state variable to toggle between login and signup form
+    const [emailId, setEmailId] = useState("");
+    const [password, setPassword] = useState(""); 
+    const [isLoginPage, setIsLoginPage] = useState(true);
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        try{
-            const result = await axios.post(BASE_URL + "/login", {
-                emailId,
-                password
-            }, {withCredentials: true})
-            console.log("resssss", result.data.data);
-
-            // save data to redux store
+        try {
+            const result = await axios.post(BASE_URL + "/login", { emailId, password }, { withCredentials: true });
             dispatch(addUser(result.data.data));
-
-            // navigate to / route
             return navigate("/");
-        }catch(err){
+        } catch(err) {
             setError(err?.response?.data);
-            //console.log("Errrorrrr", err.message)
         }
     }
 
     const handleSignUp = async () => {
-        try{
-            const result = await axios.post(BASE_URL + "/signup", {
-                firstName,
-                lastName,
-                emailId,
-                password
-            }, {withCredentials: true})
-            console.log("resssss", result.data.data);
-
-            // save data to redux store
+        try {
+            const result = await axios.post(BASE_URL + "/signup", { firstName, lastName, emailId, password }, { withCredentials: true });
             dispatch(addUser(result.data.data));
-
-            // navigate to /profile route
             return navigate("/profile");
-        }catch(err){
+        } catch(err) {
             setError(err?.response?.data);
-            //console.log("Errrorrrr", err.message)
         }
     }
 
-    const handleReset = async () => {
-        try{
-            setEmailId("");
-            setPassword(""); 
-        }catch(err){
-            console.log("Error resetting form data.");
-        }
+    const handleReset = () => {
+        setEmailId("");
+        setPassword(""); 
     }
 
     return (
-        <div className="flex justify-center mt-5">
-            <div className="card card-compact bg-base-200 w-96 shadow-xl">
-        
-            <div className="card-body">
-                <h2 className="card-title justify-center"><u>{isLoginPage? 'Login' : 'Sign Up'}</u></h2>
-                {!isLoginPage && 
-                <>
-                <label className="form-control w-full max-w-xs ml-5">
-                    <div className="label">
-                        <span className="label-text">First Name</span>
+        <div className="flex justify-center mt-10">
+            <div className="card shadow-2xl rounded-lg w-96" style={{ background: 'linear-gradient(to right, black, gray)' }}>
+                <div className="card-body p-8 text-white">
+                    <h2 className="card-title text-center text-xl font-bold mb-4">
+                        {isLoginPage ? 'Login' : 'Sign Up'}
+                    </h2>
+                    {!isLoginPage && (
+                        <>
+                            <label className="form-control w-full max-w-xs mx-auto">
+                                <span className="label-text text-white">First Name</span>
+                                <input type="text" value={firstName} className="input input-bordered w-full mt-1 text-black" onChange={(e) => setFirstName(e.target.value)} />
+                            </label>
+                            <label className="form-control w-full max-w-xs mx-auto mt-4">
+                                <span className="label-text text-white">Last Name</span>
+                                <input type="text" value={lastName} className="input input-bordered w-full mt-1 text-black" onChange={(e) => setLastName(e.target.value)} />
+                            </label>
+                        </>
+                    )}
+                    <label className="form-control w-full max-w-xs mx-auto mt-4">
+                        <span className="label-text text-white">Email Id</span>
+                        <input type="text" value={emailId} className="input input-bordered w-full mt-1 text-black" onChange={(e) => setEmailId(e.target.value)} />
+                    </label>
+                    <label className="form-control w-full max-w-xs mx-auto mt-4">
+                        <span className="label-text text-white">Password</span>
+                        <input type="password" value={password} className="input input-bordered w-full mt-1 text-black" onChange={(e) => setPassword(e.target.value)} />
+                    </label>
+                    {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+                    <div className="card-actions justify-center mt-6">
+                        <button className="btn bg-white text-blue-500 hover:bg-red-300 mr-4" onClick={handleReset}>Reset</button>
+                        <button className="btn bg-white text-blue-500 hover:bg-green-200" onClick={isLoginPage ? handleLogin : handleSignUp}>
+                            {isLoginPage ? 'Login' : 'Sign Up'}
+                        </button>
                     </div>
-                <input type="text" value={firstName} className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setFirstName(e.target.value)} />
-                </label>
-
-                <label className="form-control w-full max-w-xs ml-5">
-                    <div className="label">
-                        <span className="label-text">Last Name</span>
-                    </div>
-                <input type="text" value={lastName} className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setLastName(e.target.value)} />
-                </label>
-                </>
-                }
-
-                <label className="form-control w-full max-w-xs ml-5">
-                    <div className="label">
-                        <span className="label-text">Email Id</span>
-                    </div>
-                <input type="text" value={emailId} className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setEmailId(e.target.value)} />
-                </label>
-
-                <label className="form-control w-full max-w-xs ml-5">
-                    <div className="label">
-                        <span className="label-text">Password</span>
-                    </div>
-                <input type="text" value={password} className="input input-bordered w-full max-w-xs" 
-                onChange={(e) => setPassword(e.target.value)}/>
-                </label>
-                <p className="text-red-500">{error}</p>
-                <div className="card-actions justify-center">
-                    <button className="btn btn-primary mr-10 mt-5" onClick={() => handleReset()}>Reset</button>
-                    <button className="btn btn-primary mt-5" onClick={isLoginPage ? () => handleLogin() : () => handleSignUp()}>{isLoginPage ? 'Login' : 'Sign Up'}</button>
+                    <p className="text-center mt-4 cursor-pointer" onClick={() => setIsLoginPage(val => !val)}>
+                        {isLoginPage ? 'New User? Sign Up Here' : 'Existing User? Login Here'}
+                    </p>
                 </div>
-                <p className="m-auto cursor-pointer mt-5" onClick={() => setIsLoginPage(val => !val)}>{isLoginPage ? 'New User, Sign Up Here' : 'Existing User, Login Here'}</p>
-            </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Login;

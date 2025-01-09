@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom class for background image */
+.bg-main-content {
+    background-image: url('https://i.pinimg.com/originals/68/45/03/6845030d01787f4e6ea060a82274d1cf.jpg');
+    min-height: 100vh;
+  }
