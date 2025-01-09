@@ -38,3 +38,16 @@ Body
 - Route=/login => Login Page
 - Route=/connections => Connections Page
 - Route=/profile => Profile Page
+
+
+
+
+// deploying to AWS 
+
+- signup to aws account
+- login to aws
+- go to ec2 and create an ec2 instance
+- chmod 400 <secret>.pem
+- connect to the server machine using command:ssh -i "Buddy-Beat-Secret.pem" ubuntu@ec2-51-21-150-58.eu-north-1.compute.amazonaws.com
+- install nodejs as per your local nodejs version
+- git clone your projects frontend, backend on server machine

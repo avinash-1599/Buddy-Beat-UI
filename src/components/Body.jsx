@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import axios from "axios";
@@ -8,14 +8,13 @@ import { addUser } from "../utils/userSlice";
 import { useEffect } from "react";
 
 const Body = () => {
-    // on page refresh, user should be logged in
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const location = useLocation(); // Use this to get the current route
     const userData = useSelector(store => store.user);
 
     const fetchUser = async () => {
-        if(userData) return;
+        if (userData) return;
         try {
             const res = await axios.get(BASE_URL+'/profile/view', {withCredentials: true});
             dispatch(addUser(res.data.data));
@@ -31,10 +30,16 @@ const Body = () => {
         fetchUser();
     }, []);
 
+    // Conditionally apply the background image based on the current route
+    const isLoginPage = location.pathname === '/login';
+    const backgroundImageStyle = isLoginPage 
+        ? { backgroundImage: "url('../public/bg-img.png')" } 
+        : {};
+
     return (
         <div className="min-h-screen flex flex-col">
             <NavBar />
-            <main className="flex-grow bg-cover bg-center" style={{ backgroundImage: "url('../public/bg-img.png')" }}>
+            <main className="flex-grow bg-cover bg-center" style={backgroundImageStyle}>
                 <div className="bg-gray-800 bg-opacity-30 p-8 min-h-screen">
                     <Outlet />
                 </div>
