@@ -51,3 +51,40 @@ Body
 - connect to the server machine using command:ssh -i "Buddy-Beat-Secret.pem" ubuntu@ec2-51-21-150-58.eu-north-1.compute.amazonaws.com
 - install nodejs as per your local nodejs version
 - git clone your projects frontend, backend on server machine
+- For frontend
+  - npm install -> dependencies
+  - npm run build
+  - sudo apt update
+  - sudo apt install nginx
+  - sudo systemctl start nginx
+  - sudo systemctl enable nginx
+  - copy code from dist(build files) to /var/www/html
+    - sudo scp -r dist/* /var/www/html
+    - enable port 80 of your instance to run frontend app on public IP (Instance Details -> Security -> Security groups -> Edit Inbound Rules -> give Port Range 80 -> Save)
+- For Backend
+ - if any changes, push to github and then take pull on server machine
+ - allow ec2 instance public IP on mongodb server (IP whitelisting)
+ - npm install pm2 -g
+ - pm2 start npm -- start  OR  pm2 start npm --name "Buddy-Beat-Backend" -- start (for custom process name)
+ - pm2 logs
+ - pm2 list, pm2 flush <name>, pm2 stop <name>, pm2 delete <name>
+
+
+# domain name server
+
+- let us suppose we took domain buddybeat.com that maps to 51.21.150.58
+- Frontend -> 51.21.150.58 -> buddybeat.com
+- Backend -> 51.21.150.58:7777 -> buddybeat.com/api
+- for nginx proxy pass /api to 7777, we have to configure nginx
+  - go to path /etc/nginx/sites-available/default to configure
+  - server 51.21.150.58;
+  - location /api/ {
+        proxy_pass http://localhost:7777/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+  - restart nginx -> sudo systemctl restart nginx
+  - modify the BASE_URL to /api in frontend project
