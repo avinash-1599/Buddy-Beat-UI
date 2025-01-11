@@ -33,7 +33,7 @@ const Body = () => {
     // Conditionally apply the background image based on the current route
     const isLoginPage = location.pathname === '/login';
     const backgroundImageStyle = isLoginPage 
-        ? { backgroundImage: "url('../public/bg-img.png')" } 
+        ? { backgroundImage: "url('/bg-img.png')" } 
         : {};
 
     return (

@@ -69,9 +69,7 @@ Body
  - pm2 logs
  - pm2 list, pm2 flush <name>, pm2 stop <name>, pm2 delete <name>
 
-
-# domain name server
-
+#############
 - let us suppose we took domain buddybeat.com that maps to 51.21.150.58
 - Frontend -> 51.21.150.58 -> buddybeat.com
 - Backend -> 51.21.150.58:7777 -> buddybeat.com/api
@@ -88,3 +86,13 @@ Body
     }
   - restart nginx -> sudo systemctl restart nginx
   - modify the BASE_URL to /api in frontend project
+
+
+  # Adding a custom domain name
+
+  - purchase domain name from godaddy
+  - signup on cloudflare and add a new domain name
+  - change the nameservers on godaddy and point it to the cloudflare
+  - wait for sometime till your nameservers are updated
+  - dns record (map your website to your IP)
+  - enable SSL for website (flexible or full as per your requirement)

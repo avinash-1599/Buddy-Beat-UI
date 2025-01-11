@@ -24,7 +24,7 @@ const NavBar = () => {
     return (
         <div className="navbar bg-gray-800 text-white">
             <div className="flex-1">
-            <img alt="logo" src="../public/logo.png" height="30px" width="40px"/>
+            <img alt="logo" src="/logo.png" height="30px" width="40px"/>
                 <Link to='/' className="btn btn-ghost text-xl text-white">BuddyBeat</Link>
             </div>
             <div className="flex-none gap-2">
