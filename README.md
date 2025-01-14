@@ -49,7 +49,7 @@ Body
 - go to ec2 and create an ec2 instance
 - chmod 400 <secret>.pem
 - connect to the server machine using command:ssh -i "Buddy-Beat-Secret.pem" ubuntu@ec2-51-21-150-58.eu-north-1.compute.amazonaws.com
-- install nodejs as per your local nodejs version
+- install nodejs as per your local nodejs version (curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash)
 - git clone your projects frontend, backend on server machine
 - For frontend
   - npm install -> dependencies
