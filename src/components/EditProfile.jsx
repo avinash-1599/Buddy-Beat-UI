@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const EditProfile = ({ user }) => {
-    console.log('user-info', user);
+    //console.log('user-info', user);
     
     // Initialize state with default values
     const [firstName, setFirstName] = useState(user?.firstName || '');

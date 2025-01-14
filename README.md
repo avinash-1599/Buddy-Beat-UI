@@ -96,3 +96,18 @@ Body
   - wait for sometime till your nameservers are updated
   - dns record (map your website to your IP)
   - enable SSL for website (flexible or full as per your requirement)
+
+
+  # Sending emails via SES
+  - create IAM user
+  - give access as AmazonSESFullAccess
+  - verify your domain name
+  - verify your email address identity
+  - install aws sdk-v3
+  - https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javascriptv3/example_code/ses#code-examples
+  - setup SES client
+  - access credentials should be created in IAM under Security Credentials tab
+  - add credentials to the env file
+  - write code for SESClient
+  - write code for sending Email
+  - make the email dynamic by passing more params to the run function
