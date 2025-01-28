@@ -75,9 +75,17 @@ const Premium = () => {
     }
 
   return isUserPremium ? 
-  <div style="font-size: 2rem; font-weight: bold; text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
-    You are already a premium member.
-  </div> : 
+  <div style={{
+    fontSize: "2rem",
+    fontWeight: "bold",
+    textAlign: "center",
+    padding: "20px",
+    background: "rgba(255, 255, 255, 0.2)",
+    border: "2px solid rgba(255, 255, 255, 0.3)",
+    borderRadius: "12px",
+    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+    textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
+  }}> You are already a premium member.</div> : 
   ( <div className="flex flex-wrap justify-center gap-6 p-6">
       {tiers.map((tier, index) => (
         <div key={index} className={`card w-80 shadow-xl ${tier.color}`}>
