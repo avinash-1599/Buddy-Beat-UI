@@ -9,6 +9,7 @@ const Premium = () => {
         }, []);
 
   const [isUserPremium, setIsUserPremium] = useState(false);
+  const [userMembershipType, setUserMembershipType] = useState("");
 
   const tiers = [
     {
@@ -37,6 +38,7 @@ const Premium = () => {
 
         if(res.data.isPremium){
             setIsUserPremium(true);
+            setUserMembershipType(res.data.membershipType);
         }
     }catch(err){
         console.log("Error in verifying premium user: "+ err);
@@ -74,7 +76,10 @@ const Premium = () => {
         }
     }
 
+    const remainingTiers = tiers.filter(tier => tier.name !== userMembershipType);
+
   return isUserPremium ? 
+  <div>
   <div style={{
     fontSize: "2rem",
     fontWeight: "bold",
@@ -85,7 +90,35 @@ const Premium = () => {
     borderRadius: "12px",
     boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
     textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
-  }}> You are already a premium member.</div> : 
+  }}> You are already a premium member.
+  <div className="text-center space-y-2">
+      <p className="text-lg font-semibold">Subscription Details:</p>
+      <p className="text-lg font-normal">Membership type: {userMembershipType}</p>
+    </div>
+    <br />
+    <p className="text-lg font-normal">Note: You can try using below membership plans.</p>
+    </div>
+    <div className="flex flex-wrap justify-center gap-6 p-6">
+    {remainingTiers.map((tier, index) => (
+      <div key={index} className={`card w-80 shadow-xl ${tier.color}`}>
+        <div className="card-body text-center">
+          <h2 className="card-title text-2xl font-bold">{tier.name}</h2>
+          <p className="text-xl font-semibold">{tier.price}</p>
+          <ul className="mt-4 space-y-2">
+            {tier.benefits.map((benefit, idx) => (
+              <li key={idx} className="text-sm">
+                {benefit}
+              </li>
+            ))}
+          </ul>
+          <div className="card-actions justify-center mt-4">
+            <button onClick={() => handleChoosePlan(tier)} className="btn btn-primary">Choose Plan</button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div> 
+  </div>: 
   ( <div className="flex flex-wrap justify-center gap-6 p-6">
       {tiers.map((tier, index) => (
         <div key={index} className={`card w-80 shadow-xl ${tier.color}`}>
