@@ -111,3 +111,13 @@ Body
   - write code for SESClient
   - write code for sending Email
   - make the email dynamic by passing more params to the run function
+
+  # Razorpay payment gateway integration
+  - sign up on razorpay and complete KYC
+  - created a UI for premium membership page
+  - create an API for create order in backend
+   - added razorpay key and secret in env file
+   - initialized razorpay in utils folder
+   - creating order on razorpay
+   - created schema and model for payment
+   - saved the order details in payment collections
