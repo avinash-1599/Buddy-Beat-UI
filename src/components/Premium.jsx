@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 
 const Premium = () => {
 
+    useEffect(() => {
+        verifyPremiumUser();
+        }, []);
+
   const [isUserPremium, setIsUserPremium] = useState(false);
 
   const tiers = [
@@ -26,10 +30,6 @@ const Premium = () => {
       color: "bg-gradient-to-r from-blue-500 to-purple-500",
     },
   ];
-
-  useEffect(() => {
-    verifyPremiumUser();
-    }, []);
 
   const verifyPremiumUser = async () => {
     try{
