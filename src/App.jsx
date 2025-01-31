@@ -8,6 +8,7 @@ import appStore from './utils/appStore';
 import Connections from './components/Connections';
 import Requests from './components/Requests';
 import Premium from './components/Premium';
+import Chat from './components/Chat';
 
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
           <Route path='/connections' element={<Connections></Connections>} />
           <Route path='/requests' element={<Requests></Requests>} />
           <Route path='/premium' element={<Premium></Premium>} />
+          <Route path='/chat/:targetUserId' element={<Chat></Chat>} />
         </Route>
       </Routes>
     </BrowserRouter>

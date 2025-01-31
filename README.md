@@ -121,3 +121,62 @@ Body
    - creating order on razorpay
    - created schema and model for payment
    - saved the order details in payment collections
+
+
+   # Real-time chat application using web sockets (socket.io)
+
+   - create UI for chat window on /chat/:targetUserId
+   - setup socket.io in backend
+   - npm i socket.io
+
+   // app.js file
+   const express = require('express')
+   const app = express()
+   const http = require('http')
+   const server = http.createServer(app)
+   initializeSocket(server)
+   server.listen(PORT, () => console.log('server listening on PORT))
+
+   // initializing socket in backend/server
+    // socket.js file
+   const socket = require('socket.io')
+
+   const initializeSocket = (server) => {
+    const io = socket(server, {
+        cors: {
+            origin: "http://localhost:5173"
+        }
+    });
+
+    io.on('connection', (socket) => {
+        console.log('Socket connected: ', socket.id);
+
+        socket.on("joinChat", (data) => {
+            
+        })
+
+        socket.on("sendMessage", async (data) => {
+
+        })
+
+        socket.on('disconnect', () => {
+            console.log('Socket disconnected: ', socket.id);
+        })
+    })
+}
+
+module.exports = initializeSocket;
+
+
+// stting up socket in client side
+
+npm i socket.io-client
+
+// socket.js file
+
+import io from "socket.io-client";
+import { BASE_URL } from "./constants";
+
+export const createSocketConnection = () => {
+    return io(BASE_URL);
+}
