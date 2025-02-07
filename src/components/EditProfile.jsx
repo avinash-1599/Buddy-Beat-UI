@@ -17,10 +17,46 @@ const EditProfile = ({ user }) => {
     const [photoUrl, setPhotoUrl] = useState(user?.photoUrl || '');
     const [error, setError] = useState('');
     const [toastMsg, setToastMsg] = useState(false);
+    const [file, setFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
 
     const genderOptions = ['male', 'female', 'others'];
 
     const dispatch = useDispatch();
+
+    // Handle file selection
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+        }
+    };
+
+    // Upload image to S3
+    const uploadImageToS3 = async () => {
+        if (!file) return;
+        setUploading(true);
+
+        try {
+            // 1. Get pre-signed URL from backend
+            const { data } = await axios.get(`${BASE_URL}/get-presigned-url`, {
+                params: { fileName: file.name, fileType: file.type },
+            });
+
+            // 2. Upload file to S3 using the signed URL
+            await axios.put(data.uploadUrl, file, {
+                headers: { "Content-Type": file.type },
+            });
+
+            // 3. Set the photo URL from S3
+            setPhotoUrl(data.filePath);
+            setUploading(false);
+        } catch (error) {
+            console.error("Upload error:", error);
+            setError("Failed to upload image.");
+            setUploading(false);
+        }
+    };
 
     // Update profile function
     const updateProfile = async () => {
@@ -108,13 +144,36 @@ const EditProfile = ({ user }) => {
                             </select>
                         </label>
 
-                        <label className="form-control w-full max-w-xs ml-5">
+                        {/* <label className="form-control w-full max-w-xs ml-5">
                             <div className="label">
                                 <span className="label-text">Photo URL</span>
                             </div>
                             <input type="text" value={photoUrl} className="input input-bordered w-full max-w-xs" 
                                 onChange={(e) => setPhotoUrl(e.target.value)} />
+                        </label> */}
+
+                        {/* File Upload */}
+                        <label className="form-control w-full max-w-xs ml-5">
+                            <div className="label"><span className="label-text">Profile Picture</span></div>
+                            <div className="flex items-center justify-center border rounded-lg p-2">
+                                <input 
+                                    type="file" 
+                                    onChange={handleFileChange} 
+                                    className="w-full text-gray-700 file:bg-blue-500 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg"
+                                />
+                            </div>
+                            <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+                                onClick={uploadImageToS3} disabled={uploading || !file}>
+                                {uploading ? "Uploading..." : "Upload Image"}
+                            </button>
                         </label>
+
+                        {/* Image Preview */}
+                        {photoUrl && (
+                            <div className="flex justify-center mt-2">
+                                <img src={photoUrl} alt="Profile" className="w-32 h-32 object-cover rounded-full" />
+                            </div>
+                        )}
 
                         {/* About (Text Area) */}
                         <label className="form-control w-full max-w-xs ml-5">
