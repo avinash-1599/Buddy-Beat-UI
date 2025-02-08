@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import axios from 'axios';
 import UserCard from "./UserCard";
@@ -50,6 +51,7 @@ const EditProfile = ({ user }) => {
 
             // 3. Set the photo URL from S3
             setPhotoUrl(data.filePath);
+            console.log("photoUrl1", photoUrl)
             setUploading(false);
         } catch (error) {
             console.error("Upload error:", error);
@@ -143,14 +145,6 @@ const EditProfile = ({ user }) => {
                                 ))}
                             </select>
                         </label>
-
-                        {/* <label className="form-control w-full max-w-xs ml-5">
-                            <div className="label">
-                                <span className="label-text">Photo URL</span>
-                            </div>
-                            <input type="text" value={photoUrl} className="input input-bordered w-full max-w-xs" 
-                                onChange={(e) => setPhotoUrl(e.target.value)} />
-                        </label> */}
 
                         {/* File Upload */}
                         <label className="form-control w-full max-w-xs ml-5">
