@@ -8,7 +8,6 @@ import { useState } from "react";
 const NavBar = () => {
     // subscribe to the user store using useSelector hook
     const user = useSelector(store => store.user);
-    console.log("useeeeeer", user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

@@ -47,7 +47,6 @@ const Premium = () => {
 
   const handleChoosePlan = async (tier) => {
     try{
-        console.log("Chose plan: ", tier);
         const order = await axios.post(BASE_URL + "/payment/create", {tier}, {withCredentials: true});
         const {amount, keyId, orderId, currency, notes} = order.data;
 

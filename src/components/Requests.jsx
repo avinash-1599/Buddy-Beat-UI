@@ -11,7 +11,7 @@ const Requests = () => {
 
     const reviewRequest = async (status, requestId) => {
 
-        const res = await axios.post(BASE_URL + '/request/review/'+status+'/'+requestId,
+        await axios.post(BASE_URL + '/request/review/'+status+'/'+requestId,
             {}, {withCredentials: true}
         );
 
@@ -41,7 +41,7 @@ const Requests = () => {
         <div className="text-center my-10">
             <h1 className="text-bold text-3xl"><u>My Requests</u></h1>
             {requests.map(request => {
-                //console.log('check-req', request)
+
                 const {_id, firstName, lastName, age, gender, about, photoUrl} = request.fromUserId;
 
                 return (

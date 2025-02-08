@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const EditProfile = ({ user }) => {
-    //console.log('user-info', user);
     
     // Initialize state with default values
     const [firstName, setFirstName] = useState(user?.firstName || '');
@@ -51,7 +50,6 @@ const EditProfile = ({ user }) => {
 
             // 3. Set the photo URL from S3
             setPhotoUrl(data.filePath);
-            console.log("photoUrl1", photoUrl)
             setUploading(false);
         } catch (error) {
             console.error("Upload error:", error);
