@@ -39,7 +39,6 @@ const Requests = () => {
 
     return (
         <div className="text-center my-10">
-            <h1 className="text-bold text-3xl"><u>My Requests</u></h1>
             {requests.map(request => {
 
                 const {_id, firstName, lastName, age, gender, about, photoUrl} = request.fromUserId;

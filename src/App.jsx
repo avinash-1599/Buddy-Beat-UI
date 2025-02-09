@@ -6,9 +6,9 @@ import Feed from './components/Feed';
 import {Provider} from 'react-redux';
 import appStore from './utils/appStore';
 import Connections from './components/Connections';
-import Requests from './components/Requests';
 import Premium from './components/Premium';
 import Chat from './components/Chat';
+import RequestPage from './components/RequestPage';
 
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
           <Route path='/login' element={<Login></Login>} />
           <Route path='/profile' element={<Profile></Profile>} />
           <Route path='/connections' element={<Connections></Connections>} />
-          <Route path='/requests' element={<Requests></Requests>} />
+          <Route path='/requests' element={<RequestPage></RequestPage>} />
           <Route path='/premium' element={<Premium></Premium>} />
           <Route path='/chat/:targetUserId' element={<Chat></Chat>} />
         </Route>

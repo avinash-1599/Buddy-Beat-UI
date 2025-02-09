@@ -98,7 +98,7 @@ const EditProfile = ({ user }) => {
             <div className="flex justify-center mx-10">
                 <div className="card card-compact bg-base-200 w-96 shadow-xl">
                     <div className="card-body">
-                        <h2 className="card-title justify-center"><u>Edit Profile</u></h2>
+                        <h2 className="card-title justify-center"><u>Update Profile</u></h2>
 
                         {/* Form Fields */}
                         <label className="form-control w-full max-w-xs ml-5">

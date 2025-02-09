@@ -27,11 +27,14 @@ const NavBar = () => {
     return (
         <div className="navbar bg-gray-800 text-white">
             <div className="flex-1">
-            <img alt="logo" src="/logo.png" height="30px" width="40px"/>
+            <img alt="logo" src="/logo.png" height="30px" width="40px" />
                 <Link to='/' className="btn btn-ghost text-xl text-white">BuddyBeat</Link>
             </div>
             <div className="flex-none gap-2">
                 {user && (
+                    <>
+                        <img alt="user requests" src="/request-icon.webp" height="35px" width="45px" className="cursor-pointer"
+                            onClick={() => navigate("/requests")} />
                     <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="dropdown dropdown-end mx-5 flex">
                         <p className="px-4 text-sm text-white mt-2">Welcome, {user.firstName}</p>
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
@@ -41,19 +44,13 @@ const NavBar = () => {
                         </div>
                         {isDropdownOpen && (<ul
                             tabIndex={0}
-                            className="menu menu-sm dropdown-content bg-gray-800 text-white rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li>
-                                <Link to='/profile' className="justify-between">
-                                    Profile
-                                    <span className="badge">New</span>
-                                </Link>
-                            </li>
-                            <li onClick={() => setIsDropdownOpen(false)}><Link to='/connections'>Connections</Link></li>
-                            <li onClick={() => setIsDropdownOpen(false)}><Link to='/requests'>Requests</Link></li>
+                            className="menu menu-sm dropdown-content bg-gray-800 text-white rounded-box z-[1] mt-3 w-auto p-2 shadow">
+                            <li><Link to='/profile' className="justify-between">Profile</Link></li>
                             <li onClick={() => setIsDropdownOpen(false)}><Link to='/premium'>Premium</Link></li>
                             <li><a onClick={() => handleLogout()}>Logout</a></li>
                         </ul>)}
                     </div>
+                    </>
                 )}
             </div>
         </div>
