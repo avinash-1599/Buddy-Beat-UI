@@ -1,105 +1,3 @@
-// import { useEffect, useState, useRef } from "react";
-// import { createSocketConnection } from "../utils/socket";
-// import axios from "axios";
-// import { BASE_URL } from "../utils/constants";
-// import moment from "moment";
-
-// const socket = createSocketConnection();
-
-// // eslint-disable-next-line react/prop-types
-// const NotificationBell = ({ userId }) => {
-//     const [notifications, setNotifications] = useState([]);
-//     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-//     const dropdownRef = useRef(null);
-
-//     const fetchNotifications = async () => {
-//         if (!userId) return;
-//         try {
-//             const response = await axios.get(`${BASE_URL}/notifications/${userId}`, {
-//                 withCredentials: true,
-//             });
-
-//             if (response.data.success) {
-//                 setNotifications(response.data.notifications);
-//             }
-//         } catch (error) {
-//             console.error("Error fetching notifications:", error);
-//         }
-//     };
-
-//     useEffect(() => {
-//         if (!userId) {
-//             console.warn("User ID is undefined, skipping fetch");
-//             return;
-//         }
-//         fetchNotifications();
-
-//         const handleNewNotification = (newNotification) => {
-//             setNotifications((prev) => [newNotification, ...prev]);
-//         };
-
-//         socket.on("new_notification", handleNewNotification);
-
-//         return () => {
-//             socket.off("new_notification", handleNewNotification);
-//         };
-//     }, [userId]);
-
-//     // Close dropdown when clicking outside
-//     useEffect(() => {
-//         const handleClickOutside = (event) => {
-//             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-//                 setIsDropdownOpen(false);
-//             }
-//         };
-//         document.addEventListener("mousedown", handleClickOutside);
-//         return () => document.removeEventListener("mousedown", handleClickOutside);
-//     }, []);
-
-//     return (
-//         <div className="notification-bell relative" ref={dropdownRef}>
-//             <button 
-//                 className="bell-icon flex items-center space-x-1 relative" 
-//                 onClick={() => setIsDropdownOpen((prev) => !prev)}
-//             >
-//                 <img 
-//                     alt="notifications" 
-//                     src="/bell-icon.png" 
-//                     height="35px" 
-//                     width="35px" 
-//                     className="p-1 cursor-pointer"  
-//                 />  
-
-//                 {notifications.length > 0 && (
-//                     <span className="text-white bg-red-600 rounded-full text-xs px-2 py-1 absolute -top-1 -right-1">
-//                         {notifications.length}
-//                     </span>
-//                 )}
-//             </button>
-
-//             {isDropdownOpen && (
-//                 <div className="dropdown absolute right-0 mt-2 w-64 bg-gray-700 text-white shadow-lg rounded-lg p-3 z-50">
-//                     {notifications.length === 0 ? (
-//                         <p className="text-gray-400">No new notifications</p>
-//                     ) : (
-//                         notifications.map((notification, index) => (
-//                             <div 
-//                                 key={index} 
-//                                 className="notification-item text-sm p-2 border border-gray-600 rounded-lg bg-gray-500 shadow-lg hover:bg-gray-400 transition duration-200"
-//                             >
-//                                 <p>{notification.message}</p>
-//                                 <span className="text-xs text-gray-300">{moment(notification.createdAt).fromNow()}</span>
-//                             </div>
-//                         ))
-//                     )}
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
-
-// export default NotificationBell;
-
 import { useEffect, useState, useRef } from "react";
 import { createSocketConnection } from "../utils/socket";
 import axios from "axios";
@@ -215,8 +113,8 @@ const NotificationBell = ({ userId }) => {
                                     notification.is_read ? "bg-gray-500 text-gray-300" : "bg-gray-400 text-white"
                                 }`}
                             >
-                                <p>{notification.message}</p>
-                                <span className="text-xs text-gray-300">{moment(notification.createdAt).fromNow()}</span>
+                                <p className="text-xs text-black">{notification.message}</p>
+                                <span className="text-xs text-gray-700">{moment(notification.createdAt).fromNow()}</span>
                             </div>
                         ))
                     )}
