@@ -48,7 +48,6 @@ useEffect(() => {
     socket.emit("joinChat", { firstName, lastName, userId, targetUserId})
 
     socket.on("receiveMessage", ({firstName, lastName, text, timestamp}) => {
-        console.log('Message received: ', firstName, lastName, text, timestamp);
         setMessages((messages) => [...messages, {firstName, lastName, text, timestamp}]);
     });
 
