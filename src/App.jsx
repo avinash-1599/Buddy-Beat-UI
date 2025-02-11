@@ -9,6 +9,7 @@ import Connections from './components/Connections';
 import Premium from './components/Premium';
 import Chat from './components/Chat';
 import RequestPage from './components/RequestPage';
+import AuthCallback from './components/AuthCallback';
 
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
     <BrowserRouter basename="/">
       <Routes>
         <Route path='/' element={<Body></Body>}>
+          <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path='/' element={<Feed></Feed>} />
           <Route path='/login' element={<Login></Login>} />
           <Route path='/profile' element={<Profile></Profile>} />
