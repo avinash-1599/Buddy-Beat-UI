@@ -10,26 +10,15 @@ const AuthCallback = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-        console.log("🔹 Token from URL:", token);
-
-        if (token) {
-            // 🔹 Store token in localStorage (if needed)
-            localStorage.setItem("authToken", token);
-
-            axios.get(`${BASE_URL}/profile/view`, {
-                withCredentials: true
-            })
+        axios.get(`${BASE_URL}/profile/view`, { withCredentials: true })
             .then((res) => {
                 dispatch(addUser(res.data.data));
-                navigate("/"); // Redirect to home page
+                navigate("/"); // ✅ Redirect to home
             })
-            .catch((err) => console.error("Error fetching user:", err));
-        } else {
-            console.error("No token found in URL");
-            navigate("/login"); // Redirect to login if token missing
-        }
+            .catch((err) => {
+                console.error("Error fetching user:", err);
+                navigate("/login"); // ✅ Redirect to login on failure
+            });
     }, []);
 
     return <h2>Logging in...</h2>;
