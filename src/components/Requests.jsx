@@ -40,6 +40,7 @@ const Requests = () => {
     return (
         <div className="text-center my-10">
             {requests.map(request => {
+                if (!request.fromUserId) return null;
 
                 const {_id, firstName, lastName, age, gender, about, photoUrl} = request.fromUserId;
 
