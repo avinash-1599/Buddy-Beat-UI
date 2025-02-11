@@ -13,11 +13,11 @@ const AuthCallback = () => {
         axios.get(`${BASE_URL}/profile/view`, { withCredentials: true })
             .then((res) => {
                 dispatch(addUser(res.data.data));
-                navigate("/"); // ✅ Redirect to home
+                navigate("/"); // Redirect to home page
             })
             .catch((err) => {
                 console.error("Error fetching user:", err);
-                navigate("/login"); // ✅ Redirect to login on failure
+                navigate("/login"); // Redirect to login on failure
             });
     }, []);
 

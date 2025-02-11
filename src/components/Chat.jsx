@@ -54,7 +54,7 @@ useEffect(() => {
     return ()=> {
         socket.disconnect();
     }
-  }, [userId, targetUserId]);
+  }, [userId, targetUserId, firstName, lastName]);
 
   const sendMessage = () => {
     if (newMessage.trim() === "") return;
