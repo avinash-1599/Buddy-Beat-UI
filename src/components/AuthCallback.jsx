@@ -12,13 +12,13 @@ const AuthCallback = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get("token");
+        console.log("🔹 Token from URL:", token);
 
         if (token) {
             // 🔹 Store token in localStorage (if needed)
             localStorage.setItem("authToken", token);
 
             axios.get(`${BASE_URL}/profile/view`, {
-                headers: { Authorization: `Bearer ${token}` },
                 withCredentials: true
             })
             .then((res) => {
