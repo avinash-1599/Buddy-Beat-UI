@@ -25,6 +25,10 @@ const Login = () => {
         }
     }
 
+    const handleGoogleLogin = () => {
+        window.location.href = `${BASE_URL}/google`; // Redirect to Google OAuth
+    };
+
     const handleSignUp = async () => {
         try {
             const result = await axios.post(BASE_URL + "/signup", { firstName, lastName, emailId, password }, { withCredentials: true });
@@ -72,6 +76,20 @@ const Login = () => {
                         <button className="btn bg-white text-blue-500 hover:bg-red-300 mr-4" onClick={handleReset}>Reset</button>
                         <button className="btn bg-white text-blue-500 hover:bg-green-200" onClick={isLoginPage ? handleLogin : handleSignUp}>
                             {isLoginPage ? 'Login' : 'Sign Up'}
+                        </button>
+                    </div>
+
+                    <div className="flex items-center my-4">
+                    <hr className="flex-grow border-t border-gray-300" />
+                    <span className="px-2 text-gray-500">OR</span>
+                    <hr className="flex-grow border-t border-gray-300" />
+                    </div>
+
+                    {/* Google Login Button */}
+                    <div className="card-actions justify-center mt-4">
+                        <button className="btn bg-red-400 text-white hover:bg-red-500 flex items-center" onClick={handleGoogleLogin}>
+                            <img src="/gmail-icon.webp" alt="Google Logo" className="w-10 h-8 mr-2 rounded-full" />
+                            Login with Gmail
                         </button>
                     </div>
                     <p className="text-center mt-4 cursor-pointer" onClick={() => setIsLoginPage(val => !val)}>
