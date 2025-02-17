@@ -12,29 +12,23 @@ const NotificationBell = ({ userId }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    // ✅ Fetch ALL notifications (both read & unread)
     const fetchNotifications = async () => {
         if (!userId) return;
         try {
-            const response = await axios.get(`${BASE_URL}/notifications/${userId}`, {
-                withCredentials: true,
-            });
-
+            const response = await axios.get(`${BASE_URL}/notifications/${userId}`, { withCredentials: true });
             if (response.data.success) {
-                setNotifications(response.data.notifications); // ✅ Keep all notifications
+                setNotifications(response.data.notifications);
             }
         } catch (error) {
             console.error("Error fetching notifications:", error);
         }
     };
 
-    // ✅ Mark notifications as read but KEEP them in the list
     const markNotificationsAsRead = async () => {
         try {
             if (notifications.some((notif) => !notif.is_read)) {
                 await axios.post(`${BASE_URL}/notifications/mark-read`, { userId }, { withCredentials: true });
 
-                // ✅ Update UI: Only change `is_read`, don't remove notifications
                 setNotifications((prev) =>
                     prev.map((notif) => ({ ...notif, is_read: true }))
                 );
@@ -45,10 +39,7 @@ const NotificationBell = ({ userId }) => {
     };
 
     useEffect(() => {
-        if (!userId) {
-            console.warn("User ID is undefined, skipping fetch");
-            return;
-        }
+        if (!userId) return;
         fetchNotifications();
 
         const handleNewNotification = (newNotification) => {
@@ -62,7 +53,6 @@ const NotificationBell = ({ userId }) => {
         };
     }, [userId]);
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -73,51 +63,53 @@ const NotificationBell = ({ userId }) => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // ✅ Calculate unread notification count
     const unreadCount = notifications.filter((notif) => !notif.is_read).length;
 
     return (
-        <div className="notification-bell relative" ref={dropdownRef}>
+        <div className="relative" ref={dropdownRef}>
             <button 
-                className="bell-icon flex items-center space-x-1 relative" 
+                className="relative flex items-center justify-center p-2 rounded-full hover:bg-gray-200 transition"
                 onClick={() => {
                     setIsDropdownOpen((prev) => !prev);
-                    markNotificationsAsRead(); // ✅ Only mark as read, don't remove
+                    markNotificationsAsRead();
                 }}
             >
                 <img 
                     alt="notifications" 
                     src="/bell-icon.png" 
-                    height="35px" 
-                    width="35px" 
-                    className="p-1 cursor-pointer"  
-                />  
-
-                {/* ✅ Show count only for unread notifications */}
+                    height="30px" 
+                    width="30px" 
+                    className="cursor-pointer"
+                />
                 {unreadCount > 0 && (
-                    <span className="text-white bg-red-600 rounded-full text-xs px-2 py-1 absolute -top-1 -right-1">
+                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                         {unreadCount}
                     </span>
                 )}
             </button>
 
             {isDropdownOpen && (
-                <div className="dropdown absolute right-0 mt-2 w-64 bg-gray-700 text-white shadow-lg rounded-lg p-3 z-50">
-                    {notifications.length === 0 ? (
-                        <p className="text-gray-400">No notifications</p>
-                    ) : (
-                        notifications.map((notification, index) => (
-                            <div 
-                                key={index} 
-                                className={`notification-item text-sm p-2 border border-gray-600 rounded-lg shadow-lg transition duration-200 ${
-                                    notification.is_read ? "bg-gray-500 text-gray-300" : "bg-gray-400 text-white"
-                                }`}
-                            >
-                                <p className="text-xs text-black">{notification.message}</p>
-                                <span className="text-xs text-gray-700">{moment(notification.createdAt).fromNow()}</span>
-                            </div>
-                        ))
-                    )}
+                <div className="absolute right-0 mt-3 w-72 bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 z-50">
+                    <div className="p-3 text-gray-700 font-semibold border-b">
+                        Notifications
+                    </div>
+                    <div className="max-h-64 overflow-y-auto">
+                        {notifications.length === 0 ? (
+                            <p className="p-4 text-gray-500 text-sm text-center">No new notifications</p>
+                        ) : (
+                            notifications.map((notification, index) => (
+                                <div 
+                                    key={index} 
+                                    className={`p-3 text-sm flex flex-col border-b transition hover:bg-gray-100 ${
+                                        notification.is_read ? "bg-gray-50 text-gray-600" : "bg-white text-black"
+                                    }`}
+                                >
+                                    <p>{notification.message}</p>
+                                    <span className="text-xs text-gray-400">{moment(notification.createdAt).fromNow()}</span>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             )}
         </div>
