@@ -48,11 +48,24 @@ const Chat = ({ targetUserId, onClose }) => {
     const socket = createSocketConnection();
     socket.emit("joinChat", { firstName, lastName, userId, targetUserId });
 
+    // socket.on("receiveMessage", ({ firstName, lastName, text, timestamp }) => {
+    //   setMessages((messages) => [
+    //     ...messages,
+    //     { firstName, lastName, text, timestamp },
+    //   ]);
+    // });
+
     socket.on("receiveMessage", ({ firstName, lastName, text, timestamp }) => {
-      setMessages((messages) => [
-        ...messages,
-        { firstName, lastName, text, timestamp },
-      ]);
+      // Check if the message is already in the state to prevent duplication
+      setMessages((messages) => {
+        const isMessageExist = messages.some(
+          (msg) => msg.text === text && msg.timestamp === timestamp
+        );
+        if (!isMessageExist) {
+          return [...messages, { firstName, lastName, text, timestamp }];
+        }
+        return messages;
+      });
     });
 
     return () => {
@@ -60,8 +73,30 @@ const Chat = ({ targetUserId, onClose }) => {
     };
   }, [userId, targetUserId, firstName, lastName]);
 
+  // const sendMessage = () => {
+  //   if (newMessage.trim() === "") return;
+  //   const socket = createSocketConnection();
+  //   socket.emit("sendMessage", {
+  //     firstName,
+  //     lastName,
+  //     userId,
+  //     targetUserId,
+  //     text: newMessage,
+  //     timestamp: format(new Date(), "dd MMM yyyy, hh:mm a"),
+  //   });
+  //   setMessages((messages) => [
+  //     ...messages,
+  //     { firstName, lastName, text: newMessage, timestamp: format(new Date(), "dd MMM yyyy, hh:mm a") },
+  //   ]);
+  //   setNewMessage("");
+  // };
+
   const sendMessage = () => {
     if (newMessage.trim() === "") return;
+  
+    const timestamp = format(new Date(), "dd MMM yyyy, hh:mm a");
+  
+    // Emit the message to the server
     const socket = createSocketConnection();
     socket.emit("sendMessage", {
       firstName,
@@ -69,14 +104,18 @@ const Chat = ({ targetUserId, onClose }) => {
       userId,
       targetUserId,
       text: newMessage,
-      timestamp: format(new Date(), "dd MMM yyyy, hh:mm a"),
+      timestamp,
     });
-    setMessages((messages) => [
-      ...messages,
-      { firstName, lastName, text: newMessage, timestamp: format(new Date(), "dd MMM yyyy, hh:mm a") },
-    ]);
+  
+    // Add the new message to state immediately
+    const messageData = { firstName, lastName, text: newMessage, timestamp };
+  
+    setMessages((messages) => [...messages, messageData]);
+  
+    // Clear the input after sending
     setNewMessage("");
   };
+  
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
