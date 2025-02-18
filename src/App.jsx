@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import appStore from './utils/appStore';
 import Connections from './components/Connections';
 import Premium from './components/Premium';
-import Chat from './components/Chat';
+//import Chat from './components/Chat';
 import RequestPage from './components/RequestPage';
 import AuthCallback from './components/AuthCallback';
 
@@ -26,7 +26,7 @@ export default function App() {
           <Route path='/connections' element={<Connections></Connections>} />
           <Route path='/requests' element={<RequestPage></RequestPage>} />
           <Route path='/premium' element={<Premium></Premium>} />
-          <Route path='/chat/:targetUserId' element={<Chat></Chat>} />
+          {/* <Route path='/chat/:targetUserId' element={<Chat></Chat>} /> */}
         </Route>
       </Routes>
     </BrowserRouter>

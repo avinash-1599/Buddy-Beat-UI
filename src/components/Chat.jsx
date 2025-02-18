@@ -14,6 +14,7 @@ const Chat = ({ targetUserId, onClose }) => {
   if (!targetUserId) return null;
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [targetUser, setTargetUser] = useState(null);
 
   const user = useSelector((store) => store.user);
   const userId = user?._id;
@@ -38,22 +39,26 @@ const Chat = ({ targetUserId, onClose }) => {
     }
   };
 
+  // Fetch target user details
+  const fetchTargetUser = async (targetUserId) => {
+    try {
+      const response = await axios.get(BASE_URL+'/user/'+targetUserId, {withCredentials: true});
+      setTargetUser(response?.data?.data);
+    } catch (err) {
+      console.error("Error fetching target user details: ", err.message);
+    }
+  };
+
   useEffect(() => {
+    fetchTargetUser(targetUserId);
     fetchChatMessages();
-  }, []);
+  }, [targetUserId]);
 
   useEffect(() => {
     if (!userId || !targetUserId) return;
 
     const socket = createSocketConnection();
     socket.emit("joinChat", { firstName, lastName, userId, targetUserId });
-
-    // socket.on("receiveMessage", ({ firstName, lastName, text, timestamp }) => {
-    //   setMessages((messages) => [
-    //     ...messages,
-    //     { firstName, lastName, text, timestamp },
-    //   ]);
-    // });
 
     socket.on("receiveMessage", ({ firstName, lastName, text, timestamp }) => {
       // Check if the message is already in the state to prevent duplication
@@ -72,24 +77,6 @@ const Chat = ({ targetUserId, onClose }) => {
       socket.disconnect();
     };
   }, [userId, targetUserId, firstName, lastName]);
-
-  // const sendMessage = () => {
-  //   if (newMessage.trim() === "") return;
-  //   const socket = createSocketConnection();
-  //   socket.emit("sendMessage", {
-  //     firstName,
-  //     lastName,
-  //     userId,
-  //     targetUserId,
-  //     text: newMessage,
-  //     timestamp: format(new Date(), "dd MMM yyyy, hh:mm a"),
-  //   });
-  //   setMessages((messages) => [
-  //     ...messages,
-  //     { firstName, lastName, text: newMessage, timestamp: format(new Date(), "dd MMM yyyy, hh:mm a") },
-  //   ]);
-  //   setNewMessage("");
-  // };
 
   const sendMessage = () => {
     if (newMessage.trim() === "") return;
@@ -131,9 +118,9 @@ const Chat = ({ targetUserId, onClose }) => {
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-600 font-semibold text-xl">
             {/* Avatar or initials of user */}
-            <span>{firstName?.[0]}{lastName?.[0]}</span>
+            <span>{targetUser?.firstName?.[0]}{targetUser?.lastName?.[0]}</span>
           </div>
-          <h3 className="text-white text-xl font-medium">{firstName} {lastName}</h3>
+          <h3 className="text-white text-xl font-medium">{targetUser?.firstName} {targetUser?.lastName}</h3>
         </div>
 
         <button
