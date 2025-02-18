@@ -1,14 +1,17 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
-import { Send } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Send, X } from "lucide-react";
+//import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { format } from "date-fns";
 
-const Chat = () => {
-  const { targetUserId } = useParams();
+const Chat = ({ targetUserId, onClose }) => {
+  //const { targetUserId } = useParams();
+  if (!targetUserId) return null;
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -17,91 +20,141 @@ const Chat = () => {
   const firstName = user?.firstName;
   const lastName = user?.lastName;
 
-
   const fetchChatMessages = async () => {
     try {
       const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
         withCredentials: true,
       });
 
-      const chatMessages = chat?.data?.messages.map(msg => {
-        return {
-            firstName: msg?.senderId?.firstName, 
-            lastName: msg?.senderId?.lastName, 
-            text: msg.text
-        }
-      })
+      const chatMessages = chat?.data?.messages.map((msg) => ({
+        firstName: msg?.senderId?.firstName,
+        lastName: msg?.senderId?.lastName,
+        text: msg.text,
+        timestamp: msg.timestamp || format(new Date(), "dd MMM yyyy, hh:mm a"),
+      }));
       setMessages(chatMessages);
     } catch (err) {
-      console.log("Error fetching chat messages: ", err.message)
-      }
-    };
-
-useEffect(() => {
-    fetchChatMessages();
-    }, []);
+      console.log("Error fetching chat messages: ", err.message);
+    }
+  };
 
   useEffect(() => {
-    if(!userId || !targetUserId) return;
+    fetchChatMessages();
+  }, []);
+
+  useEffect(() => {
+    if (!userId || !targetUserId) return;
 
     const socket = createSocketConnection();
-    socket.emit("joinChat", { firstName, lastName, userId, targetUserId})
+    socket.emit("joinChat", { firstName, lastName, userId, targetUserId });
 
-    socket.on("receiveMessage", ({firstName, lastName, text, timestamp}) => {
-        setMessages((messages) => [...messages, {firstName, lastName, text, timestamp}]);
+    socket.on("receiveMessage", ({ firstName, lastName, text, timestamp }) => {
+      setMessages((messages) => [
+        ...messages,
+        { firstName, lastName, text, timestamp },
+      ]);
     });
 
-    return ()=> {
-        socket.disconnect();
-    }
+    return () => {
+      socket.disconnect();
+    };
   }, [userId, targetUserId, firstName, lastName]);
 
   const sendMessage = () => {
     if (newMessage.trim() === "") return;
     const socket = createSocketConnection();
-    socket.emit("sendMessage", {firstName, lastName, userId, targetUserId, text: newMessage, timestamp: format(new Date(), "dd MMM yyyy, hh:mm a")});
+    socket.emit("sendMessage", {
+      firstName,
+      lastName,
+      userId,
+      targetUserId,
+      text: newMessage,
+      timestamp: format(new Date(), "dd MMM yyyy, hh:mm a"),
+    });
+    setMessages((messages) => [
+      ...messages,
+      { firstName, lastName, text: newMessage, timestamp: format(new Date(), "dd MMM yyyy, hh:mm a") },
+    ]);
     setNewMessage("");
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-        e.preventDefault();
+      e.preventDefault();
       sendMessage();
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto border-4 border-blue-500 rounded shadow-md flex flex-col h-[500px]">
-      {/* Chat Messages */}
-      <h1 className="p-2 border-b border-gray-600">Chat</h1>
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg, index) => {
-        return (<div key={index} className={`chat ${msg.firstName === user.firstName ? "chat-end" : "chat-start"}`}>
-            <div className="chat-header">
-              {msg.firstName+" "+msg.lastName}
-              <time className="text-xs opacity-50"> {msg.timestamp}</time>
+    <div className="w-full max-w-lg mx-auto bg-gray-900 shadow-lg rounded-lg flex flex-col h-[600px] border border-gray-800">
+       {/* Chat header */}
+      <div className="flex items-center justify-between p-1 bg-gradient-to-r from-violet-500 to-green-300 rounded-t-lg shadow-md">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-600 font-semibold text-xl">
+            {/* Avatar or initials of user */}
+            <span>{firstName?.[0]}{lastName?.[0]}</span>
+          </div>
+          <h3 className="text-white text-xl font-medium">{firstName} {lastName}</h3>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="text-black hover:text-red-500 transition duration-200 ease-in-out"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+       {/* Chat Messages */}
+       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-800 text-white">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              msg.firstName === user.firstName ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`relative max-w-[75%] px-4 py-3 rounded-2xl shadow-lg ${
+                msg.firstName === user.firstName
+                  ? "bg-teal-500 text-white rounded-br-none"
+                  : "bg-purple-500 text-white rounded-bl-none"
+              }`}
+            >
+              <div className="text-sm font-semibold text-black">{msg.firstName}</div>
+              <div className="mt-1 text-base">{msg.text}</div>
+              <div className="text-xs text-gray-200 text-right mt-1">
+                {msg.timestamp}
+              </div>
+
+              {/* Chat Bubble Tail */}
+              <div
+                className={`absolute bottom-0 w-3 h-3 bg-inherit ${
+                  msg.firstName === user.firstName
+                    ? "right-[-6px] rounded-br-full"
+                    : "left-[-6px] rounded-bl-full"
+                }`}
+              ></div>
             </div>
-            <div className="chat-bubble">{msg.text}</div>
-            <div className="chat-footer opacity-50">Seen</div>
-          </div>)})
-        }
+          </div>
+        ))}
       </div>
 
       {/* Input Box */}
-      <div className="flex items-center p-4 border-t border-blue-500">
+      <div className="flex items-center p-4 bg-gray-900 border-t border-gray-700">
         <input
           type="text"
           placeholder="Type a message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyPress}
-          className="flex-1 p-2 border rounded-md focus:outline-none"
+          className="flex-1 p-3 rounded-full bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400"
         />
         <button
           onClick={sendMessage}
-          className="ml-2 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
+          className="ml-3 p-3 rounded-full bg-teal-500 text-white hover:bg-teal-600 transition duration-200"
         >
-          <Send className="w-5 h-5" />
+          <Send className="w-6 h-6" />
         </button>
       </div>
     </div>

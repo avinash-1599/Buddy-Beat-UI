@@ -1,13 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnection } from "../utils/connectionSlice";
-import { Link } from "react-router-dom";
+import Chat from "./Chat"; // Import Chat component
 
 const Connections = () => {
     const connections = useSelector(store => store.connections);
     const dispatch = useDispatch();
+    const [chatUserId, setChatUserId] = useState(null); // Manage chat visibility
 
     const fetchConnections = async () => {
         try {
@@ -23,11 +24,10 @@ const Connections = () => {
     }, []);
 
     if (!connections) return null;
-    
     if (connections.length === 0) return <h1 className="flex justify-center my-10 text-xl font-semibold">No Connections Found</h1>;
 
     return (
-        <div className="my-10 px-5">
+        <div className="my-10 px-5 relative">
             {connections.map(connection => {
                 const { _id, firstName, lastName, age, gender, about, photoUrl } = connection;
 
@@ -41,12 +41,22 @@ const Connections = () => {
                                 <p className="text-gray-700 text-sm mt-1">{about}</p>
                             </div>
                         </div>
-                        <Link to={`/chat/${_id}`}>
-                            <button className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition">Chat</button>
-                        </Link>
+                        <button
+                            onClick={() => setChatUserId(_id)} // Open Chat with user
+                            className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
+                        >
+                            Chat
+                        </button>
                     </div>
                 );
             })}
+
+            {/* Chat Dialogue Box */}
+            {chatUserId && (
+                <div className="fixed top-16 right-6 w-[350px]">
+                    <Chat targetUserId={chatUserId} onClose={() => setChatUserId(null)} />
+                </div>
+            )}
         </div>
     );
 };
