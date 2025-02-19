@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { format } from "date-fns";
+import useOnlineStatus from "../utils/customHooks/useOnlineStatus";
 
 const Chat = ({ targetUserId, onClose }) => {
   //const { targetUserId } = useParams();
@@ -15,6 +16,7 @@ const Chat = ({ targetUserId, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [targetUser, setTargetUser] = useState(null);
+  const onlineStatus = useOnlineStatus();
 
   const user = useSelector((store) => store.user);
   const userId = user?._id;
@@ -116,10 +118,18 @@ const Chat = ({ targetUserId, onClose }) => {
        {/* Chat header */}
       <div className="flex items-center justify-between p-1 bg-gradient-to-r from-violet-500 to-green-300 rounded-t-lg shadow-md">
         <div className="flex items-center space-x-3">
+        <div className="relative w-10 h-10">
+          {/* User Avatar / Initials */}
           <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-600 font-semibold text-xl">
-            {/* Avatar or initials of user */}
             <span>{targetUser?.firstName?.[0]}{targetUser?.lastName?.[0]}</span>
           </div>
+
+          {/* Online/Offline Status Dot */}
+          <div
+            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white 
+              ${onlineStatus ? "bg-green-500" : "bg-red-500"}`}
+          ></div>
+        </div>
           <h3 className="text-white text-xl font-medium">{targetUser?.firstName} {targetUser?.lastName}</h3>
         </div>
 
