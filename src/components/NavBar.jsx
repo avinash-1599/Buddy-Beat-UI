@@ -25,7 +25,7 @@ const NavBar = () => {
     };
 
     return (
-        <div className="navbar bg-gray-800 text-white flex items-center justify-between px-6 py-2">
+        <div className="navbar bg-gray-800 text-white flex items-center justify-between px-6 py-2 z-50">
             {/* Left Side - Logo & Brand */}
             <div className="flex items-center space-x-3">
                 <img alt="logo" src="/logo.png" height="30px" width="40px" />

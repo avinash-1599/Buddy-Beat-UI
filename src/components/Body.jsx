@@ -51,7 +51,7 @@ const Body = () => {
     return (
         <div className="min-h-screen flex flex-col relative bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
             <NavBar />
-            <main className="flex-grow relative flex items-center justify-center overflow-hidden mt-[-50px]">
+            <main className="flex-grow relative flex items-center justify-center overflow-hidden mt-[-50px] z-0">
                 {/* Floating Animated Texts */}
                 {isLoginPage && (
                     <div className="absolute inset-0">
