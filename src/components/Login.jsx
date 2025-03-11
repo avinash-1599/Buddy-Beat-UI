@@ -50,7 +50,7 @@ const Login = () => {
 
     return (
         <div className="flex justify-center">
-            <div className="card shadow-2xl rounded-lg w-96" style={{ background: 'linear-gradient(to right, black, gray)' }}>
+            <div className="card shadow-2xl rounded-lg w-96" style={{ background: 'linear-gradient(to right, #374151, #6B7280)' }}>
                 <div className="card-body p-8 text-white">
                     <h2 className="card-title text-center text-xl font-bold mb-2">
                         {isLoginPage ? 'Login' : 'Sign Up'}
