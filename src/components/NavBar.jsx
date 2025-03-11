@@ -8,6 +8,7 @@ import NotificationBell from "./NotificationBell";
 
 const NavBar = () => {
     const user = useSelector(store => store.user);
+    console.log("User--", user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

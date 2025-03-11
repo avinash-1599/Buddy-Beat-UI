@@ -7,9 +7,10 @@ import {Provider} from 'react-redux';
 import appStore from './utils/appStore';
 import Connections from './components/Connections';
 import Premium from './components/Premium';
-//import Chat from './components/Chat';
 import RequestPage from './components/RequestPage';
 import AuthCallback from './components/AuthCallback';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 
 export default function App() {
@@ -26,8 +27,9 @@ export default function App() {
           <Route path='/connections' element={<Connections></Connections>} />
           <Route path='/requests' element={<RequestPage></RequestPage>} />
           <Route path='/premium' element={<Premium></Premium>} />
-          {/* <Route path='/chat/:targetUserId' element={<Chat></Chat>} /> */}
+          <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>} />
         </Route>
+        <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
       </Routes>
     </BrowserRouter>
     </Provider>
