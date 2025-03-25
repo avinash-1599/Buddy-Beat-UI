@@ -5,6 +5,7 @@ import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { Eye, EyeOff } from "lucide-react";
+import { set } from "date-fns";
 
 const Login = () => {
     const [firstName, setFirstName] = useState('');
@@ -44,8 +45,15 @@ const Login = () => {
     }
 
     const handleReset = () => {
-        setEmailId("");
-        setPassword(""); 
+        if(isLoginPage){
+            setEmailId("");
+            setPassword(""); 
+        }else{
+            setFirstName("");
+            setLastName("");
+            setEmailId("");
+            setPassword(""); 
+        }
     }
 
     return (

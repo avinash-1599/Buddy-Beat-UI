@@ -11,8 +11,9 @@ import RequestPage from './components/RequestPage';
 import AuthCallback from './components/AuthCallback';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
-import PostForm from './components/PostForm';
+//import PostForm from './components/PostForm';
 import PostFeed from './components/PostFeed';
+import PostLayout from './components/PostLayout';
 
 
 export default function App() {
@@ -30,7 +31,7 @@ export default function App() {
           <Route path='/requests' element={<RequestPage></RequestPage>} />
           <Route path='/premium' element={<Premium></Premium>} />
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>} />
-          <Route path="/create-post" element={<PostForm></PostForm>} />
+          <Route path="/create-post" element={<PostLayout></PostLayout>} />
           <Route path="/post/feed" element={<PostFeed></PostFeed>} />
         </Route>
         <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
