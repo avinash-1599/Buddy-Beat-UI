@@ -7,71 +7,86 @@ import { useState } from "react";
 import NotificationBell from "./NotificationBell";
 
 const NavBar = () => {
-    const user = useSelector(store => store.user);
-    console.log("User--", user);
+    const user = useSelector((store) => store.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleLogout = async () => {
         try {
-            await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+            await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
             dispatch(removeUser());
             setIsDropdownOpen(false);
-            return navigate("/login");
+            navigate("/login");
         } catch (err) {
-            console.log("Error logging out", err);
+            console.error("Error logging out", err);
         }
     };
 
     return (
-        <div className="navbar bg-gray-800 text-white flex items-center justify-between px-6 py-2 z-50">
-            {/* Left Side - Logo & Brand */}
+        <nav className="bg-gray-800 text-white flex items-center justify-between px-6 py-3 shadow-md z-50">
+            {/* Left Section - Logo & Brand */}
             <div className="flex items-center space-x-3">
-                <img alt="logo" src="/logo.png" height="30px" width="40px" />
-                <Link to="/" className="text-xl font-bold text-white">BuddyBeat</Link>
+                <img src="/logo.png" alt="logo" className="h-8 w-8" />
+                <Link to="/post/feed" className="text-xl font-bold hover:text-gray-300">BuddyBeat</Link>
             </div>
 
-            {/* Center - Welcome Message */}
-            <div className="hidden md:flex flex-1 justify-center">
-                {user && (
-                    <p className="text-sm text-white">
+            {/* Center Section - Welcome Message */}
+            {user && (
+                <div className="hidden md:flex flex-1 justify-center items-center space-x-4">
+                    <p className="text-sm">
                         Welcome, <span className="text-lg font-semibold text-yellow-300">{user.firstName}</span>
                     </p>
-                )}
-            </div>
+                    <img
+                        src="/explore-users.webp"
+                        alt="explore users"
+                        className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
+                        onClick={() => navigate("/")}
+                    />
+                </div>
+            )}
 
-            {/* Right Side - Icons & Profile */}
+            {/* Right Section - Icons & Profile */}
             <div className="flex items-center space-x-5">
                 {user && (
                     <>
+                        <img
+                            src="/home-icon.jpg"
+                            alt="posts feed"
+                            className="h-8 w-8 cursor-pointer border border-black rounded-lg"
+                            onClick={() => navigate("/post/feed")}
+                        />
                         <NotificationBell userId={user?._id} />
                         <img
-                            alt="user requests"
                             src="/request-icon.webp"
-                            height="35px"
-                            width="45px"
-                            className="cursor-pointer"
+                            alt="user requests"
+                            className="h-10 w-10 cursor-pointer"
                             onClick={() => navigate("/requests")}
                         />
-                        {/* Profile & Dropdown */}
+                        {/* Profile Dropdown */}
                         <div className="relative">
-                            <div
+                            <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="cursor-pointer flex items-center space-x-2"
+                                className="flex items-center space-x-2 focus:outline-none"
                             >
                                 <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300">
-                                    <img alt="user photo" src={user.photoUrl} className="w-full h-full object-cover" />
+                                    <img src={user.photoUrl} alt="user photo" className="w-full h-full object-cover" />
                                 </div>
-                            </div>
+                            </button>
                             {isDropdownOpen && (
-                                <ul className="absolute right-0 mt-3 w-40 bg-gray-800 text-white rounded-md shadow-lg p-2 z-50">
-                                    <li><Link to="/profile" className="block p-2 hover:bg-gray-700">Profile</Link></li>
-                                    <li onClick={() => setIsDropdownOpen(false)}>
-                                        <Link to="/premium" className="block p-2 hover:bg-gray-700">Premium</Link>
+                                <ul className="absolute right-0 mt-3 w-40 bg-gray-800 text-white rounded-md shadow-lg p-2">
+                                    <li>
+                                        <Link to="/profile" className="block p-2 hover:bg-gray-700">Profile</Link>
                                     </li>
                                     <li>
-                                        <button onClick={handleLogout} className="w-full text-left p-2 hover:bg-gray-700">Logout</button>
+                                        <Link to="/premium" className="block p-2 hover:bg-gray-700" onClick={() => setIsDropdownOpen(false)}>
+                                            Premium
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <button onClick={handleLogout} className="w-full text-left p-2 hover:bg-gray-700">
+                                            Logout
+                                        </button>
                                     </li>
                                 </ul>
                             )}
@@ -79,7 +94,7 @@ const NavBar = () => {
                     </>
                 )}
             </div>
-        </div>
+        </nav>
     );
 };
 
