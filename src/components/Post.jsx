@@ -13,8 +13,12 @@ const Post = ({ post }) => {
     const [likedUsers, setLikedUsers] = useState([]); 
     const [showLikedUsers, setShowLikedUsers] = useState(false);
 
-    const { userId, content, media, createdAt, _id: postId } = post;
-    const { firstName, lastName, photoUrl } = userId;
+    const { content, media, createdAt, _id: postId } = post;
+    
+    const firstName = post?.userId?.firstName || "Unknown";
+    const lastName = post?.userId?.lastName || "";
+    const photoUrl = post?.userId?.photoUrl || "https://tamilnaducouncil.ac.in/wp-content/uploads/2020/04/dummy-avatar";
+
     const dispatch = useDispatch();
 
     useEffect(() => {
