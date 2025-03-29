@@ -30,27 +30,32 @@ const Connections = () => {
         <div className="my-10 px-5 relative">
             {connections.map(connection => {
                 const { _id, firstName, lastName, age, gender, about, photoUrl } = connection;
-
+    
                 return (
-                    <div key={_id} className="flex items-center justify-between p-5 rounded-lg bg-gray-100 shadow-md w-full max-w-2xl mx-auto mb-4">
-                        <div className="flex items-center gap-4">
+                    <div key={_id} className="flex flex-col sm:flex-row items-center sm:justify-between p-5 rounded-lg bg-gray-100 shadow-md w-full max-w-2xl mx-auto mb-4 gap-4">
+                        {/* User Info Section */}
+                        <div className="flex items-center gap-4 w-full">
                             <img className="w-16 h-16 rounded-full object-cover" src={photoUrl} alt={`${firstName} ${lastName}`} />
-                            <div className="text-left">
+                            <div className="text-left flex-1">
                                 <h2 className="font-bold text-lg">{firstName} {lastName}</h2>
                                 {age && gender && <p className="text-gray-600 text-sm">{age}, {gender}</p>}
                                 <p className="text-gray-700 text-sm mt-1">{about}</p>
                             </div>
                         </div>
-                        <button
-                            onClick={() => setChatUserId(_id)} // Open Chat with user
-                            className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
-                        >
-                            Chat
-                        </button>
+    
+                        {/* Chat Button Section */}
+                        <div className="mt-4 sm:mt-0 w-full sm:w-auto text-center">
+                            <button
+                                onClick={() => setChatUserId(_id)}
+                                className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition w-full sm:w-auto"
+                            >
+                                Chat
+                            </button>
+                        </div>
                     </div>
                 );
             })}
-
+    
             {/* Chat Dialogue Box */}
             {chatUserId && (
                 <div className="fixed top-16 right-6 w-[350px]">
@@ -58,7 +63,7 @@ const Connections = () => {
                 </div>
             )}
         </div>
-    );
+    );    
 };
 
 export default Connections;
