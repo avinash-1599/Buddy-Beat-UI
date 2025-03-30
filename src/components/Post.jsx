@@ -12,6 +12,9 @@ const Post = ({ post }) => {
     const [likeCount, setLikeCount] = useState(post.likes.length);
     const [likedUsers, setLikedUsers] = useState([]); 
     const [showLikedUsers, setShowLikedUsers] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [showComments, setShowComments] = useState(false);
+    const [commentText, setCommentText] = useState("");
 
     const { content, media, createdAt, _id: postId } = post;
     
@@ -25,7 +28,8 @@ const Post = ({ post }) => {
         setIsLiked(Array.isArray(post.likes) && post.likes.includes(currentUserId));
         setLikeCount(Array.isArray(post.likes) ? post.likes.length : 0);
         fetchLikedUsers();
-    }, [post.likes]);
+        fetchComments();
+    }, [post.likes, currentUserId]);
 
     const fetchLikedUsers = async () => {
         try {
@@ -34,6 +38,16 @@ const Post = ({ post }) => {
             setLikedUsers(data.likedUsers);
         } catch (error) {
             console.error("Error fetching liked users:", error);
+        }
+    };
+
+    const fetchComments = async () => {
+        try {
+            const { data } = await axios.get(`${BASE_URL}/post/comments/${postId}`, { withCredentials: true });
+            console.log("Comments Data:", data.comments);
+            setComments(data.comments ?? []);
+        } catch (error) {
+            console.error("Error fetching comments:", error);
         }
     };
 
@@ -50,6 +64,21 @@ const Post = ({ post }) => {
             fetchLikedUsers();
         } catch (error) {
             console.error("Error liking post:", error);
+        }
+    };
+
+    const handleComment = async () => {
+        if (!commentText.trim()) return;
+        
+        try {
+            const { data } = await axios.post(`${BASE_URL}/post/comment/${postId}`, 
+                { text: commentText }, 
+                { withCredentials: true }
+            );
+            setCommentText(""); // Clear input after submitting
+            setComments([...comments, data.newComment]); // Add new comment to state
+        } catch (error) {
+            console.error("Error adding comment:", error);
         }
     };
 
@@ -96,14 +125,14 @@ const Post = ({ post }) => {
 
             {/* Like & Comment Section */}
             <div className="flex items-center mt-5">
-                <img
-                    src={isLiked ? "/liked-icon.png" : "/like-icon.png"}
-                    alt="like-icon"
-                    onClick={handleLike}
-                    className="h-9 w-10 cursor-pointer"
+                <img src={isLiked ? "/liked-icon.png" : "/like-icon.png"} onClick={handleLike} className="h-9 w-10 cursor-pointer" alt="like" />
+                <span className="mx-2 font-medium text-gray-700">{likeCount}</span>
+                <img 
+                    src={showComments ? "/hide-comment.png" : "/comment-icon.png"} 
+                    onClick={() => { fetchComments(); setShowComments(!showComments); }} 
+                    className="h-10 w-10 cursor-pointer ml-3" 
+                    alt="comments toggle" 
                 />
-                <span className="mx-2">{likeCount}</span>
-                {/* <img src="/comment-icon.png" alt="comment-icon" className="h-10 w-10 mx-2" /> */}
             </div>
 
             {/* Liked By Section */}
@@ -123,6 +152,39 @@ const Post = ({ post }) => {
                     )}
                 </p>
             )}
+
+            {/* Comments Section */}
+            {showComments && (
+                <div className="mt-4 border-t border-gray-300 pt-3 max-h-60 overflow-y-auto">
+                    <div className="flex items-center mb-4">
+                        <input 
+                            type="text" 
+                            value={commentText} 
+                            onChange={(e) => setCommentText(e.target.value)} 
+                            placeholder="Write a comment..." 
+                            className="text-black flex-1 p-2 border rounded-lg" 
+                        />
+                        <button 
+                            onClick={handleComment} 
+                            className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                            Post
+                        </button>
+                    </div>
+
+                    {comments.length > 0 ? (
+                        comments.map((comment) => (
+                            <div key={comment._id} className="py-2 border-b">
+                                <p className="text-gray-800 font-bold">{comment.userId?.firstName || "Unknown User"}:</p>
+                                <p className="text-gray-700">{comment.text}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-500 text-sm text-center">No comments yet.</p>
+                    )}
+                </div>
+            )}
+
 
             {/* Liked Users Modal */}
             {showLikedUsers && (
