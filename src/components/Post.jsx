@@ -3,6 +3,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePostLikes } from "../utils/postSlice";
+import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 const Post = ({ post }) => {
@@ -17,12 +18,15 @@ const Post = ({ post }) => {
     const [commentText, setCommentText] = useState("");
 
     const { content, media, createdAt, _id: postId } = post;
+    console.log("Post Data:", post);
     
     const firstName = post?.userId?.firstName || "Unknown";
     const lastName = post?.userId?.lastName || "";
     const photoUrl = post?.userId?.photoUrl || "https://tamilnaducouncil.ac.in/wp-content/uploads/2020/04/dummy-avatar";
+    const postUserId = post?.userId?._id;
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setIsLiked(Array.isArray(post.likes) && post.likes.includes(currentUserId));
@@ -76,7 +80,7 @@ const Post = ({ post }) => {
                 { withCredentials: true }
             );
             setCommentText(""); // Clear input after submitting
-            setComments([...comments, data.newComment]); // Add new comment to state
+            setComments([data.newComment, ...comments]);
         } catch (error) {
             console.error("Error adding comment:", error);
         }
@@ -91,12 +95,13 @@ const Post = ({ post }) => {
     const otherCount = likedUsers.length - 1;
 
     return (
-        <div className="w-full max-w-3xl bg-gray-400 shadow-md rounded-xl p-6 mx-auto my-4 border border-gray-300">
+        // <div className="w-full max-w-3xl bg-gray-400 shadow-md rounded-xl p-6 mx-auto my-4 border border-gray-300">
+        <div className="w-full max-w-3xl min-w-[400px] bg-gray-400 shadow-md rounded-xl p-6 mx-auto my-4 border border-gray-300">
             {/* User Info */}
             <div className="flex items-center mb-3">
-                <img src={photoUrl} className="h-12 w-12 rounded-full border border-gray-300" alt="User" />
+                <img src={photoUrl} onClick = {() => navigate(`/user/profile/${postUserId}`)} className="cursor-pointer h-12 w-12 rounded-full border border-gray-300" alt="User" />
                 <div className="ml-3">
-                    <p className="font-bold text-gray-800">{firstName} {lastName}</p>
+                    <p onClick = {() => navigate(`/user/profile/${postUserId}`)} className="cursor-pointer font-bold text-gray-800">{firstName} {lastName}</p>
                     <p className="text-xs text-gray-500">{new Date(createdAt).toLocaleString()}</p>
                 </div>
             </div>

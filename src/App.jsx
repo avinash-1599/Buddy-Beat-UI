@@ -14,6 +14,8 @@ import ResetPassword from './components/ResetPassword';
 //import PostForm from './components/PostForm';
 import PostFeed from './components/PostFeed';
 import PostLayout from './components/PostLayout';
+import UserProfile from './components/UserProfile';
+import LoginUsingOTP from './components/LoginUsingOTP';
 
 
 export default function App() {
@@ -26,6 +28,7 @@ export default function App() {
           <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path='/' element={<Feed></Feed>} />
           <Route path='/login' element={<Login></Login>} />
+          <Route path='/login/otp' element={<LoginUsingOTP></LoginUsingOTP>} />
           <Route path='/profile' element={<Profile></Profile>} />
           <Route path='/connections' element={<Connections></Connections>} />
           <Route path='/requests' element={<RequestPage></RequestPage>} />
@@ -33,6 +36,7 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>} />
           <Route path="/create-post" element={<PostLayout></PostLayout>} />
           <Route path="/post/feed" element={<PostFeed></PostFeed>} />
+          <Route path="/user/profile/:userId" element={<UserProfile></UserProfile>} />
         </Route>
         <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
       </Routes>

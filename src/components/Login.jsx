@@ -10,7 +10,7 @@ const Login = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [emailId, setEmailId] = useState("");
-    const [password, setPassword] = useState(""); 
+    const [password, setPassword] = useState("");
     const [isLoginPage, setIsLoginPage] = useState(true);
     const [error, setError] = useState("");
 
@@ -91,11 +91,17 @@ const Login = () => {
                             </button>
                         </div>
                     </label>
+                    <div className="flex">
+                    {isLoginPage && <p className="text-left text-blue-400 text-sm mt-1 cursor-pointer hover:text-blue-300 transition duration-200 ease-in-out"
+                    onClick = {() => navigate("/login/otp")}>
+                        Login Using OTP
+                    </p>}
                     {isLoginPage && <p className="text-right text-blue-400 text-sm mt-1 cursor-pointer hover:text-blue-300 transition duration-200 ease-in-out"
                         onClick={() => navigate("/forgot-password")} // Navigate to Forgot Password Page
                     >
                         Forgot Password?
                     </p>}
+                    </div>
                     {error && <p className="text-red-500 text-center mt-4">{error}</p>}
                     <div className="card-actions justify-center mt-6">
                         <button className="btn bg-gray-300 text-blue-500 hover:bg-red-300 mr-4" onClick={handleReset}>Reset</button>
