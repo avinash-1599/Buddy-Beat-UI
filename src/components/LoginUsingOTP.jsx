@@ -1,28 +1,50 @@
 import axios from "axios";
 import { useState } from "react";
 import { BASE_URL } from "../utils/constants";
+import { useNavigate } from "react-router-dom"; // for redirect
 
 const LoginUsingOTP = () => {
-  const [step, setStep] = useState("phone"); // 'phone' or 'otp'
+  const [step, setStep] = useState("email");
   const [emailId, setEmailId] = useState("");
   const [otp, setOTP] = useState("");
+  const navigate = useNavigate();
 
   const handleSendOTP = async () => {
-    if (emailId.match(/^[0-9]{10}$/)) {
-      console.log("Sending OTP to:", emailId);
-      await axios.post(BASE_URL + "/send/otp", { emailId });
-      // Simulate OTP sending
-      setStep("otp");
+    if (emailId.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      try {
+        console.log("Sending OTP to:", emailId);
+        await axios.post(BASE_URL + "/send/otp", { emailId });
+        setStep("otp");
+      } catch (err) {
+        alert(err.response?.data?.message || "Failed to send OTP");
+      }
     } else {
-      alert("Enter a valid 10-digit phone number");
+      alert("Enter a valid Email Id");
     }
   };
 
-  const handleVerifyOTP = () => {
+  const handleVerifyOTP = async () => {
     if (otp.length === 6) {
-      console.log("Verifying OTP:", otp);
-      // Simulate verification
-      alert("OTP Verified! 🎉");
+      try {
+        const res = await axios.post(BASE_URL + "/verify/otp", {
+          emailId,
+          otp,
+        });
+
+        alert(res.data.message);
+
+        // ✅ Store token and redirect
+        if (res.data.data) {
+          navigate("/post/feed"); // redirect after successful login
+        }
+
+        // Clear inputs
+        setEmailId("");
+        setOTP("");
+        setStep("email");
+      } catch (err) {
+        alert(err.response?.data?.message || "OTP verification failed");
+      }
     } else {
       alert("Enter a valid 6-digit OTP");
     }
@@ -35,17 +57,16 @@ const LoginUsingOTP = () => {
           Login with OTP
         </h2>
 
-        {step === "phone" ? (
+        {step === "email" ? (
           <>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Id
             </label>
             <input
-              type="tel"
-              maxLength={10}
+              type="text"
               value={emailId}
               onChange={(e) => setEmailId(e.target.value)}
-              placeholder="Enter 10-digit mobile number"
+              placeholder="Enter your Email Id"
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
@@ -76,7 +97,10 @@ const LoginUsingOTP = () => {
             </button>
 
             <button
-              onClick={() => setStep("phone")}
+              onClick={() => {
+                setStep("email");
+                setOTP("");
+              }}
               className="w-full mt-2 text-sm text-gray-500 hover:underline"
             >
               Go back
