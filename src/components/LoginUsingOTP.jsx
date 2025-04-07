@@ -31,11 +31,8 @@ const LoginUsingOTP = () => {
           otp,
         });
 
-        alert(res.data.message);
-
-        // ✅ Store token and redirect
         if (res.data.data) {
-          navigate("/post/feed"); // redirect after successful login
+          navigate("/post/feed"); // redirect to home page after successful login
         }
 
         // Clear inputs
