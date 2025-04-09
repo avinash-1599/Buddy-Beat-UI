@@ -2,12 +2,15 @@ import axios from "axios";
 import { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom"; // for redirect
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const LoginUsingOTP = () => {
   const [step, setStep] = useState("email");
   const [emailId, setEmailId] = useState("");
   const [otp, setOTP] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSendOTP = async () => {
     if (emailId.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
@@ -29,9 +32,13 @@ const LoginUsingOTP = () => {
         const res = await axios.post(BASE_URL + "/verify/otp", {
           emailId,
           otp,
-        });
+        },
+        { withCredentials: true } // Include credentials for session management);
+        );
+        console.log("OTP verification response:", res.data);
 
         if (res.data.data) {
+          dispatch(addUser(res.data.data));
           navigate("/post/feed"); // redirect to home page after successful login
         }
 
