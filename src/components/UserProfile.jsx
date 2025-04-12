@@ -50,7 +50,7 @@ const UserProfile = () => {
     const mediaPosts = posts.filter((post) => post.media);
     const textPosts = posts.filter((post) => !post.media);
 
-    const toRender = activeTab === "MediaPosts" ? mediaPosts : textPosts;
+    const toRender = activeTab === "Media Posts" ? mediaPosts : textPosts;
 
     if (toRender.length === 0) {
       return (
@@ -163,7 +163,7 @@ const UserProfile = () => {
 
       {/* Tabs */}
       <div className="flex justify-around border-b">
-        {["MediaPosts", "Posts"].map((tab) => (
+        {["Media Posts", "Posts"].map((tab) => (
           <button
             key={tab}
             className={`py-2 px-4 font-medium capitalize ${
