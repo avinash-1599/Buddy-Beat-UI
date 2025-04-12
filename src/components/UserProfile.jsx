@@ -10,7 +10,7 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("MediaPosts");
+  const [activeTab, setActiveTab] = useState("Media Posts");
   const [editingBio, setEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState("");
   const [savingBio, setSavingBio] = useState(false);
@@ -159,7 +159,7 @@ const UserProfile = () => {
                 rows={3}
               />
             ) : (
-              <p>{user.about || "No bio added yet."}</p>
+                <p className="whitespace-pre-line">{user.about || "No bio added yet."}</p>
             )}
           </div>
         </div>
