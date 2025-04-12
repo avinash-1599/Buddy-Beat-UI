@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const UserProfile = () => {
@@ -16,6 +16,9 @@ const UserProfile = () => {
   const [savingBio, setSavingBio] = useState(false);
 
   const dispatch = useDispatch();
+
+  const loggedInUser = useSelector((store) => store.user);
+  const loggedInUserId = loggedInUser?._id;
 
   const fetchUser = async () => {
     try {
@@ -118,7 +121,8 @@ const UserProfile = () => {
               {user.firstName} {user.lastName}
             </h2>
             {!editingBio ? (
-              <button
+               user._id === loggedInUserId &&
+                (<button
                 className="text-sm bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700 transition"
                 onClick={() => {
                   setEditingBio(true);
@@ -126,7 +130,7 @@ const UserProfile = () => {
                 }}
               >
                 Update Bio
-              </button>
+              </button>)
             ) : (
               <div className="flex gap-2">
                 <button
@@ -167,7 +171,7 @@ const UserProfile = () => {
           <button
             key={tab}
             className={`py-2 px-4 font-medium capitalize ${
-              activeTab === tab ? "border-b-2 border-black text-black" : "text-gray-500"
+              activeTab === tab ? "border-b-2 border-black text-white" : "text-gray-500"
             }`}
             onClick={() => setActiveTab(tab)}
           >
