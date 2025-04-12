@@ -94,7 +94,7 @@ const Login = () => {
                     <div className="flex">
                     {isLoginPage && <p className="text-left text-blue-400 text-sm mt-1 cursor-pointer hover:text-blue-300 transition duration-200 ease-in-out"
                     onClick = {() => navigate("/login/otp")}>
-                        Login Using OTP
+                        Login With OTP
                     </p>}
                     {isLoginPage && <p className="text-right text-blue-400 text-sm mt-1 cursor-pointer hover:text-blue-300 transition duration-200 ease-in-out"
                         onClick={() => navigate("/forgot-password")} // Navigate to Forgot Password Page
