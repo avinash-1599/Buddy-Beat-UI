@@ -107,7 +107,10 @@ const Post = ({ post }) => {
             </div>
 
             {/* Post Content */}
-            <p className="mt-3 text-gray-700 leading-relaxed whitespace-pre-wrap">{content}</p>
+            {/* <p className="mt-3 text-gray-700 leading-relaxed whitespace-pre-wrap">{content}</p> */}
+            <div className="flex justify-center mt-3">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap w-full max-w-[600px]">{content}</p>
+            </div>
 
             {/* Media Handling */}
             {media && (
