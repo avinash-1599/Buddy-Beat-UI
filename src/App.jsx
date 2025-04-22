@@ -16,6 +16,8 @@ import PostFeed from './components/PostFeed';
 import PostLayout from './components/PostLayout';
 import UserProfile from './components/UserProfile';
 import LoginUsingOTP from './components/LoginUsingOTP';
+import Requests from './components/Requests';
+import BasicSettings from './components/BasicSettings';
 
 
 export default function App() {
@@ -26,17 +28,19 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Body></Body>}>
           <Route path="/auth-callback" element={<AuthCallback />} />
-          <Route path='/' element={<Feed></Feed>} />
+          <Route path='/explore' element={<Feed></Feed>} />
           <Route path='/login' element={<Login></Login>} />
           <Route path='/login/otp' element={<LoginUsingOTP></LoginUsingOTP>} />
           <Route path='/profile' element={<Profile></Profile>} />
           <Route path='/connections' element={<Connections></Connections>} />
+          <Route path='/user-requests' element={<Requests></Requests>} />
           <Route path='/requests' element={<RequestPage></RequestPage>} />
           <Route path='/premium' element={<Premium></Premium>} />
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>} />
           <Route path="/create-post" element={<PostLayout></PostLayout>} />
           <Route path="/post/feed" element={<PostFeed></PostFeed>} />
           <Route path="/user/profile/:userId" element={<UserProfile></UserProfile>} />
+          <Route path="/settings" element={<BasicSettings></BasicSettings>} />
         </Route>
         <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
       </Routes>

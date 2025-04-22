@@ -20,7 +20,7 @@ const Requests = () => {
     const fetchRequests = async () => {
         try {
             const res = await axios.get(`${BASE_URL}/user/requests/recieved`, { withCredentials: true });
-            dispatch(addRequest(res.data.data));
+            dispatch(addRequest(Array.isArray(res.data.data) ? res.data.data : []));
         } catch (err) {
             console.error("Error fetching requests:", err.message);
         }
@@ -30,11 +30,14 @@ const Requests = () => {
         fetchRequests();
     }, []);
 
+    console.log("Requests:", requests);
+
     if (!requests) return null;
 
     if (requests.length === 0) return <h1 className="flex justify-center my-10 text-xl font-semibold">No Requests Found</h1>;
 
     return (
+        <div className="flex justify-center pt-10 min-h-screen">
         <div className="my-10 px-5">
             {requests.map(request => {
                 if (!request.fromUserId) return null;
@@ -58,6 +61,7 @@ const Requests = () => {
                     </div>
                 );
             })}
+        </div>
         </div>
     );
 };

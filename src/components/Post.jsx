@@ -109,7 +109,7 @@ const Post = ({ post }) => {
             {/* Post Content */}
             {/* <p className="mt-3 text-gray-700 leading-relaxed whitespace-pre-wrap">{content}</p> */}
             <div className="flex justify-center mt-3">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap w-full max-w-[600px]">{content}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap w-full max-w-[700px]">{content}</p>
             </div>
 
             {/* Media Handling */}
@@ -118,13 +118,13 @@ const Post = ({ post }) => {
                     {media.endsWith(".mp4") || media.endsWith(".webm") || media.endsWith(".mov") ? (
                         <video 
                             src={media} 
-                            className="w-full max-w-[600px] max-h-[400px] rounded-lg border border-gray-200"
+                            className="w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200"
                             controls
                         />
                     ) : (
                         <img 
                             src={media} 
-                            className="w-full max-w-[600px] max-h-[400px] rounded-lg border border-gray-200"
+                            className="w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200"
                             alt="Post Media"
                         />
                     )}

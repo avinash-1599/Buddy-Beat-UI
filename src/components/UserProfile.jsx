@@ -107,7 +107,7 @@ const UserProfile = () => {
   if (!user) return <div className="text-center mt-10 text-red-500">User not found</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 mt-10">
       {/* Profile section */}
       <div className="bg-gray-400 shadow-lg rounded-2xl flex flex-col md:flex-row items-center md:items-start p-6 mb-10">
         <img

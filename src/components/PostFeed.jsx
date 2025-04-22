@@ -5,6 +5,8 @@ import { BASE_URL } from "../utils/constants";
 import { setPosts } from "../utils/postSlice";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FriendRecommendations from "./FriendRecommendations";
+import SideBar from "./SideBar";
 
 const PostFeed = () => {
     const postFeed = useSelector((store) => store.post);
@@ -50,32 +52,50 @@ const PostFeed = () => {
                 <p className="text-gray-400 text-lg text-center">No posts available. Be the first to share something!</p>
             </div>
         );
-    }    
+    }
 
     return (
-        <div className="max-w-4xl mx-auto my-10 p-6 bg-gray-900 text-white rounded-lg shadow-lg">
-            <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6 relative">
-                <h2 className="text-2xl font-extrabold text-white">📢 Latest Posts</h2>
-                <div
-                    className="relative flex items-center"
-                    onMouseEnter={() => setShowTooltip(true)}
-                    onMouseLeave={() => setShowTooltip(false)}
-                >
-                    <img
-                        src="/create-post-icon.png"
-                        alt="Create post"
-                        className="h-10 w-10 cursor-pointer bg-white p-1 border border-black rounded-full hover:shadow-md transition-transform transform hover:scale-110"
-                        onClick={() => navigate("/create-post")}
-                    />
-                    {showTooltip && (
-                        <span className="absolute left-full ml-2 bg-black text-white text-sm px-3 py-1 rounded-md whitespace-nowrap">Create a new post</span>
-                    )}
+        <div className="flex my-10 w-full gap-4 h-[100vh]">
+            
+            {/* Left - Sidebar */}
+            <div className="hidden lg:block w-2/12">
+                <SideBar />
+            </div>
+
+            {/* Center - Post Feed */}
+            <div className="w-full lg:w-7/12 overflow-y-auto mt-5 relative">
+                <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+                    <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6 relative">
+                        <h2 className="text-2xl font-extrabold text-white">📢 Latest Posts</h2>
+                        <div
+                            className="relative flex items-center"
+                            onMouseEnter={() => setShowTooltip(true)}
+                            onMouseLeave={() => setShowTooltip(false)}
+                        >
+                            <img
+                                src="/create-post-icon.png"
+                                alt="Create post"
+                                className="h-10 w-10 cursor-pointer bg-white p-1 border border-black rounded-full hover:shadow-md transition-transform transform hover:scale-110"
+                                onClick={() => navigate("/create-post")}
+                            />
+                            {showTooltip && (
+                            <span className="absolute right-full mr-2 bg-black text-white text-sm px-3 py-1 rounded-md whitespace-nowrap z-50 shadow-lg top-1/2 -translate-y-1/2">
+                                Create a new post
+                            </span>
+                            )}
+                        </div>
+                    </div>
+                    <div className="space-y-6 w-full max-w-3xl mx-auto">
+                        {posts.map((post) => (
+                            <Post key={post._id} post={post} />
+                        ))}
+                    </div>
                 </div>
             </div>
-            <div className="space-y-6 w-full max-w-3xl mx-auto">
-                {posts.map((post) => (
-                    <Post key={post._id} post={post} />
-                ))}
+
+            {/* Right - Friend Recommendations */}
+            <div className="w-3/12 min-h-screen">
+            <FriendRecommendations />
             </div>
         </div>
     );

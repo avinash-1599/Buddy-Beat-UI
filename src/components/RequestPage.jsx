@@ -6,7 +6,7 @@ const RequestPage = () => {
   const [showConnections, setShowConnections] = useState(false);
 
   return (
-    <div className="p-6 bg-gray-600 min-h-screen flex flex-col items-center">
+    <div className="p-6 bg-gray-600 min-h-screen flex flex-col items-center mt-20">
 
       {/* Toggle Switch */}
       <div className="flex justify-center mb-6">

@@ -96,7 +96,7 @@ const PostForm = ({ setPreviewMedia, setPostContent }) => {
   };
 
   return (
-    <div className="flex-1 bg-white p-6 rounded-xl shadow-md">
+    <div className="flex-1 bg-white p-6 rounded-xl shadow-md mx-20">
       <h2 className="text-xl font-semibold text-gray-800 text-center mb-4">Create a Post</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col space-y-3">

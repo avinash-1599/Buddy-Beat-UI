@@ -104,8 +104,13 @@ const Body = () => {
                 )}
 
                 {/* Glassmorphism Login Form */}
-                <div className="p-10 rounded-2xl min-w-[350px] relative z-20">
+                {/* <div className="p-10 rounded-2xl min-w-[350px] relative z-20"> */}
+                {/* <div className="w-full py-6">
                     <Outlet />
+                </div> */}
+                 {/* ✅ Full height, no external scroll */}
+                <div className="w-full">
+                <Outlet />
                 </div>
             </main>
             <Footer />

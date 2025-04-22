@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 
 const NavBar = () => {
@@ -11,6 +11,26 @@ const NavBar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+
+    const dropdownRef = useRef();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const loggedInUser = useSelector((store) => store.user);
+    const loggedInUserId = loggedInUser?._id; 
 
     const handleLogout = async () => {
         try {
@@ -28,7 +48,7 @@ const NavBar = () => {
             {/* Left Section - Logo & Brand */}
             <div className="flex items-center space-x-3">
                 <img src="/logo.png" alt="logo" className="h-8 w-8" />
-                <Link to="/post/feed" className="text-xl font-bold hover:text-gray-300">BuddyBeat</Link>
+                <Link to={loggedInUserId && "/post/feed"} className="text-xl font-bold hover:text-gray-300">BuddyBeat</Link>
             </div>
 
             {/* Center Section - Welcome Message */}
@@ -41,7 +61,7 @@ const NavBar = () => {
                         src="/explore-users.webp"
                         alt="explore users"
                         className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/explore")}
                     />
                 </div>
             )}
@@ -64,7 +84,7 @@ const NavBar = () => {
                             onClick={() => navigate("/requests")}
                         />
                         {/* Profile Dropdown */}
-                        <div className="relative">
+                        <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className="flex items-center space-x-2 focus:outline-none"
@@ -77,11 +97,6 @@ const NavBar = () => {
                                 <ul className="absolute right-0 mt-3 w-40 bg-gray-800 text-white rounded-md shadow-lg p-2">
                                     <li>
                                         <Link to="/profile" className="block p-2 hover:bg-gray-700">Profile</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/premium" className="block p-2 hover:bg-gray-700" onClick={() => setIsDropdownOpen(false)}>
-                                            Premium
-                                        </Link>
                                     </li>
                                     <li>
                                         <button onClick={handleLogout} className="w-full text-left p-2 hover:bg-gray-700">
