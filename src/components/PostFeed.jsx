@@ -38,18 +38,35 @@ const PostFeed = () => {
 
     if (!posts?.length) {
         return (
-            <div className="flex flex-col items-center my-16 p-8 bg-gray-900 text-white rounded-xl shadow-lg w-full max-w-2xl mx-auto">
-                <div className="flex items-center justify-between w-full border-b border-gray-700 pb-4 mb-6">
-                    <h2 className="text-3xl font-semibold text-white">📢 Latest Posts</h2>
-                    <button
-                        className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
-                        onClick={() => navigate("/create-post")}
-                    >
-                        <img src="/create-post-icon.png" alt="Create post" className="h-6 w-6" />
-                        <span>Create Post</span>
-                    </button>
+            <div className="flex px-8 lg:px-8">
+                {/* Left - Sidebar */}
+                <div className="hidden lg:block w-2/12">
+                    <SideBar />
                 </div>
-                <p className="text-gray-400 text-lg text-center">No posts available. Be the first to share something!</p>
+    
+                {/* Center - Main Content */}
+                <div className="w-full lg:w-7/12 pt-4 px-4">
+                    <div className="flex flex-col items-center p-8 bg-gray-900 text-white rounded-xl shadow-lg">
+                        <div className="flex items-center justify-between w-full border-b border-gray-700 pb-4 mb-6">
+                            <h2 className="text-3xl font-semibold text-white">📢 Latest Posts</h2>
+                            <button
+                                className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
+                                onClick={() => navigate("/create-post")}
+                            >
+                                <img src="/create-post-icon.png" alt="Create post" className="h-6 w-6" />
+                                <span>Create Post</span>
+                            </button>
+                        </div>
+                        <p className="text-gray-400 text-lg text-center">
+                            No posts available. Be the first to share something!
+                        </p>
+                    </div>
+                </div>
+    
+                {/* Right - Friend Recommendations */}
+                <div className="hidden lg:block w-3/12">
+                    <FriendRecommendations />
+                </div>
             </div>
         );
     }
