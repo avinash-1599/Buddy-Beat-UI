@@ -18,6 +18,7 @@ import UserProfile from './components/UserProfile';
 import LoginUsingOTP from './components/LoginUsingOTP';
 import Requests from './components/Requests';
 import BasicSettings from './components/BasicSettings';
+import SavedContent from './components/SavedContent';
 
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/post/feed" element={<PostFeed></PostFeed>} />
           <Route path="/user/profile/:userId" element={<UserProfile></UserProfile>} />
           <Route path="/settings" element={<BasicSettings></BasicSettings>} />
+          <Route path="/saved" element={<SavedContent></SavedContent>} />
         </Route>
         <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
       </Routes>
