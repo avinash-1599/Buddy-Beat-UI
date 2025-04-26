@@ -19,6 +19,7 @@ import LoginUsingOTP from './components/LoginUsingOTP';
 import Requests from './components/Requests';
 import BasicSettings from './components/BasicSettings';
 import SavedContent from './components/SavedContent';
+import ChatPage from './components/ChatPage';
 
 
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/user/profile/:userId" element={<UserProfile></UserProfile>} />
           <Route path="/settings" element={<BasicSettings></BasicSettings>} />
           <Route path="/saved" element={<SavedContent></SavedContent>} />
+          <Route path="/messages" element={<ChatPage></ChatPage>} />
         </Route>
         <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
       </Routes>

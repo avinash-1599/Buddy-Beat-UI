@@ -24,7 +24,7 @@ const Connections = () => {
     }, []);
 
     if (!connections) return null;
-    if (connections.length === 0) return <h1 className="flex justify-center my-10 text-xl font-semibold">No Connections Found</h1>;
+    if (connections.length === 0) return <h1 className="flex justify-center my-10 text-xl text-white font-semibold">No Connections Found</h1>;
 
     return (
         <div className="pt-10 my-10 px-5 relative">

@@ -7,7 +7,8 @@ import {
   UserSearchIcon,
   GemIcon,
   User,
-  LogOut
+  LogOut,
+  MessageCircle
 } from "lucide-react";
 
 import axios from "axios";
@@ -29,6 +30,7 @@ const SideBar = () => {
     { name: "Profile", icon: <User />, path: "/profile" },
     { name: "Requests", icon: <UsersIcon />, path: "/user-requests" },
     { name: "Connections", icon: <UsersRoundIcon />, path: "/connections" },
+    { name: "Messages", icon: <MessageCircle />, path: "/messages" },
     { type: "divider" },
     { name: "Premium", icon: <GemIcon />, path: "/premium" },
     { name: "Settings", icon: <Settings />, path: "/settings" },

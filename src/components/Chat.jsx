@@ -10,7 +10,7 @@ import { BASE_URL } from "../utils/constants";
 import { format } from "date-fns";
 import useOnlineStatus from "../utils/customHooks/useOnlineStatus";
 
-const Chat = ({ targetUserId, onClose }) => {
+const Chat = ({ targetUserId, onClose, onMessageSent }) => {
   //const { targetUserId } = useParams();
   if (!targetUserId) return null;
   const [messages, setMessages] = useState([]);
@@ -73,6 +73,7 @@ const Chat = ({ targetUserId, onClose }) => {
         }
         return messages;
       });
+      onMessageSent?.(targetUserId, { text });
     });
 
     return () => {
@@ -100,6 +101,8 @@ const Chat = ({ targetUserId, onClose }) => {
     const messageData = { firstName, lastName, text: newMessage, timestamp };
   
     setMessages((messages) => [...messages, messageData]);
+
+    onMessageSent?.(targetUserId, { text: newMessage });
   
     // Clear the input after sending
     setNewMessage("");
