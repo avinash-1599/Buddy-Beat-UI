@@ -3,6 +3,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePostLikes } from "../utils/postSlice";
+import { togglePostSave } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
@@ -18,7 +19,8 @@ const Post = ({ post }) => {
     const [commentText, setCommentText] = useState("");
 
     const { content, media, createdAt, _id: postId } = post;
-    console.log("Post Data:", post);
+
+    const [isSaved, setIsSaved] = useState(user.savedPosts.includes(postId) ?? false);
     
     const firstName = post?.userId?.firstName || "Unknown";
     const lastName = post?.userId?.lastName || "";
@@ -30,6 +32,7 @@ const Post = ({ post }) => {
 
     useEffect(() => {
         setIsLiked(Array.isArray(post.likes) && post.likes.includes(currentUserId));
+        setIsSaved(Array.isArray(user.savedPosts) && user.savedPosts.includes(postId));
         setLikeCount(Array.isArray(post.likes) ? post.likes.length : 0);
         fetchLikedUsers();
         fetchComments();
@@ -38,7 +41,6 @@ const Post = ({ post }) => {
     const fetchLikedUsers = async () => {
         try {
             const { data } = await axios.get(`${BASE_URL}/post/likes/${postId}`, { withCredentials: true });
-            console.log("Liked Users Data:", data.likedUsers); 
             setLikedUsers(data.likedUsers);
         } catch (error) {
             console.error("Error fetching liked users:", error);
@@ -48,7 +50,6 @@ const Post = ({ post }) => {
     const fetchComments = async () => {
         try {
             const { data } = await axios.get(`${BASE_URL}/post/comments/${postId}`, { withCredentials: true });
-            console.log("Comments Data:", data.comments);
             setComments(data.comments ?? []);
         } catch (error) {
             console.error("Error fetching comments:", error);
@@ -83,6 +84,19 @@ const Post = ({ post }) => {
             setComments([data.newComment, ...comments]);
         } catch (error) {
             console.error("Error adding comment:", error);
+        }
+    };
+
+    const handleSavePost = async (postId, isSaved) => {
+        try {
+            await axios.post(`${BASE_URL}/post/save/${postId}/${isSaved}`,
+                {},
+                { withCredentials: true }
+            );
+            setIsSaved(isSaved);
+            dispatch(togglePostSave({ postId }));
+        }catch(error) {
+            console.error("Error saving post:", error);
         }
     };
 
@@ -140,6 +154,13 @@ const Post = ({ post }) => {
                     onClick={() => { fetchComments(); setShowComments(!showComments); }} 
                     className="h-10 w-10 cursor-pointer ml-3" 
                     alt="comments toggle" 
+                />
+                <img 
+                    src={isSaved ? "/saved-icon.png" : "/save-icon.png"} 
+                    //className={isSaved ? "h-8 w-10 cursor-pointer ml-6" : "h-14 w-14 cursor-pointer ml-6"}
+                    className="h-8 w-10 cursor-pointer ml-6"
+                    onClick={() => handleSavePost(postId, !isSaved)}
+                    alt="save post"
                 />
             </div>
 

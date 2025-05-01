@@ -18,8 +18,9 @@ import UserProfile from './components/UserProfile';
 import LoginUsingOTP from './components/LoginUsingOTP';
 import Requests from './components/Requests';
 import BasicSettings from './components/BasicSettings';
-import SavedContent from './components/SavedContent';
+import SavedContent from './components/SavedPosts';
 import ChatPage from './components/ChatPage';
+import PostPage from './components/PostPage';
 
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>} />
           <Route path="/create-post" element={<PostLayout></PostLayout>} />
           <Route path="/post/feed" element={<PostFeed></PostFeed>} />
+          <Route path="/post/:postId" element={<PostPage />} />
           <Route path="/user/profile/:userId" element={<UserProfile></UserProfile>} />
           <Route path="/settings" element={<BasicSettings></BasicSettings>} />
           <Route path="/saved" element={<SavedContent></SavedContent>} />

@@ -5,6 +5,7 @@ import { removeUser } from "../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
+import BackButton from "./BackButton";
 
 const NavBar = () => {
     const user = useSelector((store) => store.user);
@@ -63,6 +64,9 @@ const NavBar = () => {
                         className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
                         onClick={() => navigate("/explore")}
                     />
+                    <div className="mr-6">
+                            <BackButton />
+                    </div>
                 </div>
             )}
 

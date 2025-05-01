@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
@@ -16,6 +16,7 @@ const UserProfile = () => {
   const [savingBio, setSavingBio] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const loggedInUser = useSelector((store) => store.user);
   const loggedInUserId = loggedInUser?._id;
@@ -61,12 +62,17 @@ const UserProfile = () => {
       );
     }
 
+    const handlePostClick = (postId) => {
+      navigate(`/post/${postId}`);  // Navigating to the post feed with the post ID
+  };
+
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
         {toRender.map((post) => (
           <div
             key={post._id}
             className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300"
+            onClick={() => handlePostClick(post._id)} // Handle post click
           >
             {post.media && (
               <img
