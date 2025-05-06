@@ -10,9 +10,9 @@ const BackButton = () => {
   return (
     <button 
       onClick={handleBack}
-      className="bg-gray-900 hover:bg-gray-500 text-gray-300 text-xs py-1 px-1 rounded"
+      className="bg-gray-900 hover:bg-gray-500 text-gray-300 text-xs py-2 px-3 rounded"
     >
-       ⮐ Back
+       ⮐
     </button>
   );
 };

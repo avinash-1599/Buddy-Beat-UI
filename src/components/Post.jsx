@@ -18,7 +18,12 @@ const Post = ({ post }) => {
     const [showComments, setShowComments] = useState(false);
     const [commentText, setCommentText] = useState("");
 
-    const { content, media, createdAt, _id: postId } = post;
+    const [challengeToUnlock, setChallengeToUnlock] = useState(null);
+    const [challengeAnswer, setChallengeAnswer] = useState("");
+    const [isChallengeValidated, setIsChallengeValidated] = useState(false);
+
+
+    const { content, media, createdAt, _id: postId, isLocked } = post;
 
     const [isSaved, setIsSaved] = useState(user.savedPosts.includes(postId) ?? false);
     
@@ -36,6 +41,7 @@ const Post = ({ post }) => {
         setLikeCount(Array.isArray(post.likes) ? post.likes.length : 0);
         fetchLikedUsers();
         fetchComments();
+        checkIfUnlocked();
     }, [post.likes, currentUserId]);
 
     const fetchLikedUsers = async () => {
@@ -100,6 +106,56 @@ const Post = ({ post }) => {
         }
     };
 
+    const handleUnlockPost = async (postId) => {
+        if (isChallengeValidated) {
+            alert("Post is already unlocked.");
+            return;
+        }
+
+        try {
+            const {data} = await axios.get(`${BASE_URL}/post/challenge/${postId}`,
+                { withCredentials: true }
+            );
+            console.log("Unlocking post:", postId);
+            console.log("Challenge to unlock:", data.challenge);
+            setChallengeToUnlock(data.challenge?.question);
+            
+        }catch(error) {
+            console.error("Error fetching challenge:", error);
+        }
+    };
+
+    const validateChallengeAnswer = async (postId, answer) => {
+        try {
+            const { data } = await axios.post(`${BASE_URL}/post/validate-challenge/${postId}`,
+                { answer },
+                { withCredentials: true });
+                console.log("Challenge validation response:", data);
+
+                if (data?.isValidated) {
+                    await axios.post(`${BASE_URL}/post/mark-unlocked/${postId}`, {}, { withCredentials: true });
+                    setIsChallengeValidated(data.isValidated);
+                    setChallengeToUnlock(null); // remove challenge UI
+                } else {
+                    alert("Incorrect answer. Try again.");
+                }
+
+            }catch(error) {
+                console.error("Error validating challenge answer:", error);
+                const errorMessage = error?.response?.data?.message || "Error validating challenge.";
+                alert(errorMessage);
+            }
+        }
+
+        const checkIfUnlocked = async () => {
+            try {
+                const { data } = await axios.get(`${BASE_URL}/post/is-unlocked/${postId}`, { withCredentials: true });
+                setIsChallengeValidated(data.isUnlocked);
+            } catch (error) {
+                console.error("Error checking unlock status:", error);
+            }
+        };
+
     const toggleLikedUsers = () => {
         setShowLikedUsers(!showLikedUsers);
     };
@@ -128,44 +184,96 @@ const Post = ({ post }) => {
 
             {/* Media Handling */}
             {media && (
-                <div className="flex justify-center mt-4">
-                    {media.endsWith(".mp4") || media.endsWith(".webm") || media.endsWith(".mov") ? (
-                        <video 
-                            src={media} 
-                            className="w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200"
-                            controls
-                        />
-                    ) : (
-                        <img 
-                            src={media} 
-                            className="w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200"
-                            alt="Post Media"
-                        />
-                    )}
-                </div>
+            <div className="flex justify-center mt-4">
+                {media.endsWith(".mp4") || media.endsWith(".webm") || media.endsWith(".mov") ? (
+                <video
+                    src={media}
+                    className={`w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200 ${
+                    isLocked === "locked" && !isChallengeValidated ? "blur-lg" : ""
+                    }`}
+                    controls
+                />
+                ) : (
+                <img
+                    src={media}
+                    className={`w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200 ${
+                    isLocked === "locked" && !isChallengeValidated ? "blur-lg" : ""
+                    }`}
+                    alt="Post Media"
+                />
+                )}
+            </div>
             )}
 
-            {/* Like & Comment Section */}
-            <div className="flex items-center mt-5">
-                <img src={isLiked ? "/liked-icon.png" : "/like-icon.png"} onClick={handleLike} className="h-9 w-10 cursor-pointer" alt="like" />
-                <span className="mx-2 font-medium text-gray-700">{likeCount}</span>
-                <img 
-                    src={showComments ? "/hide-comment.png" : "/comment-icon.png"} 
-                    onClick={() => { fetchComments(); setShowComments(!showComments); }} 
-                    className="h-10 w-10 cursor-pointer ml-3" 
-                    alt="comments toggle" 
+            <div className="flex items-center justify-between mt-5">
+            {/* Left: Like, Comment, Save */}
+            {isLocked !== "locked" || isChallengeValidated ? (
+                <div className="flex items-center">
+                <img
+                    src={isLiked ? "/liked-icon.png" : "/like-icon.png"}
+                    onClick={handleLike}
+                    className="h-9 w-10 cursor-pointer"
+                    alt="like"
                 />
-                <img 
-                    src={isSaved ? "/saved-icon.png" : "/save-icon.png"} 
-                    //className={isSaved ? "h-8 w-10 cursor-pointer ml-6" : "h-14 w-14 cursor-pointer ml-6"}
+                <span className="mx-2 font-medium text-gray-700">{likeCount}</span>
+                <img
+                    src={showComments ? "/hide-comment.png" : "/comment-icon.png"}
+                    onClick={() => {
+                    fetchComments();
+                    setShowComments(!showComments);
+                    }}
+                    className="h-10 w-10 cursor-pointer ml-3"
+                    alt="comments toggle"
+                />
+                <img
+                    src={isSaved ? "/saved-icon.png" : "/save-icon.png"}
                     className="h-8 w-10 cursor-pointer ml-6"
                     onClick={() => handleSavePost(postId, !isSaved)}
                     alt="save post"
                 />
+                </div>
+            ) : (
+                <div></div> // Empty div to occupy left space if post is locked
+            )}
+
+            {/* Right: Unlock Post */}
+            {isLocked === "locked" && !isChallengeValidated && (
+                <button 
+                    className="bg-blue-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-blue-600"
+                    onClick={() => handleUnlockPost(postId)}
+                >
+                Unlock Post
+                </button>
+            )}
             </div>
 
+            {/* Challenge to Unlock */}
+            {challengeToUnlock && (
+            <div className="mt-4 p-4 bg-gray-300 rounded-lg border">
+                <p className="text-black font-semibold mb-2">Answer the challenge to unlock:</p>
+                <p className="text-black mb-4">{challengeToUnlock}</p>
+                <div className="flex items-center gap-3">
+                    <input
+                        type="text"
+                        value={challengeAnswer}
+                        onChange={(e) => setChallengeAnswer(e.target.value)}
+                        placeholder="Your answer..."
+                        className="flex-1 p-2 border bg-gray-200 rounded text-black"
+                    />
+                    <button
+                        onClick={() => validateChallengeAnswer(postId, challengeAnswer)}    
+                        className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded whitespace-nowrap"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
+            )}
+
+            {/* Like/Comment Toggle */}
+
             {/* Liked By Section */}
-            {recentLiker && (
+            {recentLiker && (isLocked !== 'locked' || isChallengeValidated) && (
                 <p className="mt-2 text-black">
                     Liked by <b>{recentLiker.firstName} {recentLiker.lastName}</b> 
                     {otherCount > 0 && (

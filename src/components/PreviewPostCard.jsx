@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 /* eslint-disable react/prop-types */
-const PreviewPostCard = ({ postContent, previewMedia }) => {
+const PreviewPostCard = ({ postContent, previewMedia, isLocked }) => {
 
     const user = useSelector((store) => store.user);
     const { firstName, lastName, photoUrl, createdAt } = user;
@@ -24,7 +24,9 @@ const PreviewPostCard = ({ postContent, previewMedia }) => {
         {previewMedia?.url && (
           <div className="mt-3">
             {previewMedia.type.startsWith("image/") ? (
-              <img src={previewMedia.url} className="w-full max-h-60 rounded-lg border" alt="Preview" />
+              <img src={previewMedia.url} className={`w-full max-h-60 rounded-lg border ${
+                isLocked === "locked" ? "blur-lg" : ""
+              }`} alt="Preview" />
             ) : previewMedia.type.startsWith("video/") ? (
               <video controls className="w-full max-h-60 rounded-lg border">
                 <source src={previewMedia.url} type={previewMedia.type} />
