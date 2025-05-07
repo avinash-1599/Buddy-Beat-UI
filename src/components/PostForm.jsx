@@ -5,6 +5,8 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addNewPost } from "../utils/postSlice";
 import { MdPhotoCamera } from "react-icons/md";
+//import LocationTagger from "./LocationTagger";
+import LocationSearch from "./LocationSearch";
 
 // eslint-disable-next-line react/prop-types
 const PostForm = ({ setPreviewMedia, setPostContent, setIsLocked }) => {
@@ -17,6 +19,8 @@ const PostForm = ({ setPreviewMedia, setPostContent, setIsLocked }) => {
 
   const [selectedChallengeType, setSelectedChallengeType] = useState("");
   const [challengeData, setChallengeData] = useState(null);
+
+  const [location, setLocation] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,7 +49,12 @@ const PostForm = ({ setPreviewMedia, setPostContent, setIsLocked }) => {
     try {
       const { data } = await axios.post(
         BASE_URL + "/post/create",
-        { content, media: uploadedMediaUrl, isLocked, challengeType: selectedChallengeType, challenge: challengeData },
+        { content, 
+          media: uploadedMediaUrl, 
+          isLocked, 
+          challengeType: selectedChallengeType, 
+          challenge: challengeData,
+          location: location ? location.display_name : null },
         { withCredentials: true }
       );
 
@@ -158,6 +167,14 @@ const PostForm = ({ setPreviewMedia, setPostContent, setIsLocked }) => {
       <span>{uploading ? "Uploading..." : "Upload Image/Video"}</span>
       <input type="file" className="hidden" onChange={handleMediaChange} />
     </label>
+
+    {/* location tagging */}
+    <LocationSearch onLocationSelect={(loc) => setLocation(loc)} />
+    {location && (
+      <p className="text-sm text-gray-600 mt-1">
+        Selected Location: <span className="font-medium">{location.display_name}</span>
+      </p>
+    )}
 
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-4">
