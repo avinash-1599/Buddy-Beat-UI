@@ -23,7 +23,7 @@ const Post = ({ post }) => {
     const [isChallengeValidated, setIsChallengeValidated] = useState(false);
 
 
-    const { content, media, createdAt, _id: postId, isLocked } = post;
+    const { content, media, createdAt, _id: postId, isLocked, location } = post;
 
     const [isSaved, setIsSaved] = useState(user.savedPosts.includes(postId) ?? false);
     
@@ -168,12 +168,31 @@ const Post = ({ post }) => {
         // <div className="w-full max-w-3xl bg-gray-400 shadow-md rounded-xl p-6 mx-auto my-4 border border-gray-300">
         <div className="w-full max-w-3xl min-w-[400px] bg-gray-400 shadow-md rounded-xl p-6 mx-auto my-4 border border-gray-300">
             {/* User Info */}
-            <div className="flex items-center mb-3">
-                <img src={photoUrl} onClick = {() => navigate(`/user/profile/${postUserId}`)} className="cursor-pointer h-12 w-12 rounded-full border border-gray-300" alt="User" />
+            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center">
+                <img
+                    src={photoUrl}
+                    onClick={() => navigate(`/user/profile/${postUserId}`)}
+                    className="cursor-pointer h-12 w-12 rounded-full border border-gray-300"
+                    alt="User"
+                />
                 <div className="ml-3">
-                    <p onClick = {() => navigate(`/user/profile/${postUserId}`)} className="cursor-pointer font-bold text-gray-800">{firstName} {lastName}</p>
-                    <p className="text-xs text-gray-500">{new Date(createdAt).toLocaleString()}</p>
+                    <p
+                        onClick={() => navigate(`/user/profile/${postUserId}`)}
+                        className="cursor-pointer font-bold text-gray-800"
+                    >
+                    {firstName} {lastName}
+                    </p>
+                    {location && (
+                        <p className="text-xs text-gray-700">
+                        <span className="font-medium">{post.location}</span>
+                        </p>
+                    )}
                 </div>
+            </div>
+            <p className="text-xs text-gray-700 whitespace-nowrap">
+                {new Date(createdAt).toLocaleString()}
+            </p>
             </div>
 
             {/* Post Content */}
