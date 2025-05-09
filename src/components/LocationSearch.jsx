@@ -3,7 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 
 // eslint-disable-next-line react/prop-types
-const LocationSearch = ({ onLocationSelect }) => {
+const LocationSearch = ({ onLocationSelect, setPostLocation }) => {
   const [apiKey, setApiKey] = useState("");
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -66,7 +66,8 @@ const LocationSearch = ({ onLocationSelect }) => {
           <li
             key={idx}
             onClick={() => {
-              onLocationSelect(loc);  
+              onLocationSelect(loc);
+              setPostLocation(loc);
               setQuery(loc.display_name); 
               setResults([]);  
             }}

@@ -9,7 +9,7 @@ import { MdPhotoCamera } from "react-icons/md";
 import LocationSearch from "./LocationSearch";
 
 // eslint-disable-next-line react/prop-types
-const PostForm = ({ setPreviewMedia, setPostContent, setIsLocked }) => {
+const PostForm = ({ setPreviewMedia, setPostContent, setPostLocation, setIsLocked }) => {
   const [content, setContent] = useState("");
   const [media, setMedia] = useState(null);
   const [error, setError] = useState("");
@@ -169,7 +169,7 @@ const PostForm = ({ setPreviewMedia, setPostContent, setIsLocked }) => {
     </label>
 
     {/* location tagging */}
-    <LocationSearch onLocationSelect={(loc) => setLocation(loc)} />
+    <LocationSearch onLocationSelect={(loc) => setLocation(loc)} setPostLocation={(loc) => setPostLocation(loc)} />
     {location && (
       <p className="text-sm text-gray-600 mt-1">
         Selected Location: <span className="font-medium">{location.display_name}</span>
