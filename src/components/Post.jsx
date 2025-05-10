@@ -208,7 +208,7 @@ const Post = ({ post }) => {
                 <video
                     src={media}
                     className={`w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200 ${
-                    isLocked === "locked" && !isChallengeValidated ? "blur-lg" : ""
+                    isLocked === "locked" && !isChallengeValidated && (postUserId !== currentUserId) ? "blur-lg" : ""
                     }`}
                     controls
                 />
@@ -216,7 +216,7 @@ const Post = ({ post }) => {
                 <img
                     src={media}
                     className={`w-full max-w-[700px] max-h-[400px] rounded-lg border border-gray-200 ${
-                    isLocked === "locked" && !isChallengeValidated ? "blur-lg" : ""
+                    isLocked === "locked" && !isChallengeValidated && (postUserId !== currentUserId) ? "blur-lg" : ""
                     }`}
                     alt="Post Media"
                 />
@@ -226,7 +226,7 @@ const Post = ({ post }) => {
 
             <div className="flex items-center justify-between mt-5">
             {/* Left: Like, Comment, Save */}
-            {isLocked !== "locked" || isChallengeValidated ? (
+            {isLocked !== "locked" || isChallengeValidated || postUserId === currentUserId ? (
                 <div className="flex items-center">
                 <img
                     src={isLiked ? "/liked-icon.png" : "/like-icon.png"}
@@ -256,7 +256,7 @@ const Post = ({ post }) => {
             )}
 
             {/* Right: Unlock Post */}
-            {isLocked === "locked" && !isChallengeValidated && (
+            {isLocked === "locked" && !isChallengeValidated && (postUserId !== currentUserId) && (
                 <button 
                     className="bg-blue-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-blue-600"
                     onClick={() => handleUnlockPost(postId)}
@@ -292,7 +292,7 @@ const Post = ({ post }) => {
             {/* Like/Comment Toggle */}
 
             {/* Liked By Section */}
-            {recentLiker && (isLocked !== 'locked' || isChallengeValidated) && (
+            {recentLiker && (isLocked !== 'locked' || isChallengeValidated || postUserId === currentUserId) && (
                 <p className="mt-2 text-black">
                     Liked by <b>{recentLiker.firstName} {recentLiker.lastName}</b> 
                     {otherCount > 0 && (
