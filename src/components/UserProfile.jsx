@@ -15,6 +15,8 @@ const UserProfile = () => {
   const [bioInput, setBioInput] = useState("");
   const [savingBio, setSavingBio] = useState(false);
 
+  const [isUserConnected, setIsUserConnected] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,10 +47,28 @@ const UserProfile = () => {
     }
   };
 
+  const checkIfUsersConnected = async () => {
+    try {
+      const result = await axios.get(`${BASE_URL}/user/is-connected/${user?._id}`, {
+        withCredentials: true,
+      });
+      setIsUserConnected(result.data.isConnected);
+    } catch (error) {
+      console.error("Failed to check connection:", error);
+      return false;
+    }
+  }
+
   useEffect(() => {
     fetchUser();
     fetchPosts();
   }, [userId]);
+
+  useEffect(() => {
+    if (user?._id && user._id !== loggedInUserId) {
+      checkIfUsersConnected();
+    }
+  }, [user, loggedInUserId]);
 
   const renderContent = () => {
     const mediaPosts = posts.filter((post) => post.media);
@@ -172,7 +192,7 @@ const UserProfile = () => {
       </div>
 
       {/* Tabs */}
-      {(!user.isAccountPrivate || user._id === loggedInUserId) && <div className="flex justify-around border-b">
+      {(!user.isAccountPrivate || user._id === loggedInUserId || isUserConnected) && <div className="flex justify-around border-b">
         {["Media Posts", "Posts"].map((tab) => (
           <button
             key={tab}
@@ -187,7 +207,7 @@ const UserProfile = () => {
       </div>}
 
       {/* Content */}
-      {(!user.isAccountPrivate || user._id === loggedInUserId) ? <div className="min-h-[300px]">
+      {(!user.isAccountPrivate || user._id === loggedInUserId || isUserConnected) ? <div className="min-h-[300px]">
         {renderContent()}
       </div> : <p className="text-center text-gray-300 mt-10"> This account is private. You cannot see their media.</p>}
     </div>
