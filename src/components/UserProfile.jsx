@@ -113,7 +113,7 @@ const UserProfile = () => {
   if (!user) return <div className="text-center mt-10 text-red-500">User not found</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 mt-10">
+    <div className="max-w-5xl mx-auto p-6 mt-10 min-h-screen">
       {/* Profile section */}
       <div className="bg-gray-400 shadow-lg rounded-2xl flex flex-col md:flex-row items-center md:items-start p-6 mb-10">
         <img
@@ -172,7 +172,7 @@ const UserProfile = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-around border-b">
+      {(!user.isAccountPrivate || user._id === loggedInUserId) && <div className="flex justify-around border-b">
         {["Media Posts", "Posts"].map((tab) => (
           <button
             key={tab}
@@ -184,12 +184,12 @@ const UserProfile = () => {
             {tab}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* Content */}
-      <div className="min-h-[300px]">
+      {(!user.isAccountPrivate || user._id === loggedInUserId) ? <div className="min-h-[300px]">
         {renderContent()}
-      </div>
+      </div> : <p className="text-center text-gray-300 mt-10"> This account is private. You cannot see their media.</p>}
     </div>
   );
 };

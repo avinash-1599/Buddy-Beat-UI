@@ -21,10 +21,13 @@ const userSlice = createSlice({
             } else {
               state.savedPosts = [...(state.savedPosts || []), postId];
             }
-          }
+          },
+          setAccountPrivacy: (state, action) => {
+            state.isAccountPrivate = action.payload;
+          },
     }
 });
 
-export const { addUser, removeUser, togglePostSave } = userSlice.actions;
+export const { addUser, removeUser, togglePostSave, setAccountPrivacy } = userSlice.actions;
 
 export default userSlice.reducer;
