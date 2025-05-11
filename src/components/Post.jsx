@@ -18,6 +18,10 @@ const Post = ({ post }) => {
     const [showComments, setShowComments] = useState(false);
     const [commentText, setCommentText] = useState("");
 
+    const [unlockedUsers, setUnlockedUsers] = useState([]);
+    const [showUnlockedUsers, setShowUnlockedUsers] = useState(false);
+
+
     const [challengeToUnlock, setChallengeToUnlock] = useState(null);
     const [challengeAnswer, setChallengeAnswer] = useState("");
     const [isChallengeValidated, setIsChallengeValidated] = useState(false);
@@ -42,6 +46,7 @@ const Post = ({ post }) => {
         fetchLikedUsers();
         fetchComments();
         checkIfUnlocked();
+        fetchUnlockedUsers();
     }, [post.likes, currentUserId]);
 
     const fetchLikedUsers = async () => {
@@ -52,6 +57,16 @@ const Post = ({ post }) => {
             console.error("Error fetching liked users:", error);
         }
     };
+
+    const fetchUnlockedUsers = async () => {
+        try {
+            const { data } = await axios.get(`${BASE_URL}/post/unlocked-users/${postId}`, { withCredentials: true });
+            setUnlockedUsers(data.unlockedUsers);
+        } catch (error) {
+            console.error("Error fetching unlocked users:", error);
+        }
+    };
+    
 
     const fetchComments = async () => {
         try {
@@ -159,6 +174,11 @@ const Post = ({ post }) => {
     const toggleLikedUsers = () => {
         setShowLikedUsers(!showLikedUsers);
     };
+
+    const toggleUnlockedUsers = () => {
+        setShowUnlockedUsers(!showUnlockedUsers);
+    };
+    
 
     // Get most recent liked user
     const recentLiker = likedUsers.length > 0 ? likedUsers[0] : null;
@@ -309,6 +329,23 @@ const Post = ({ post }) => {
                 </p>
             )}
 
+            {isLocked === "locked" && (isChallengeValidated || postUserId === currentUserId) && unlockedUsers.length > 0 && (
+                <p className="mt-1 text-black">
+                    Unlocked by <b>{unlockedUsers[0].userId.firstName} {unlockedUsers[0].userId.lastName}</b>
+                    {unlockedUsers.length > 1 && (
+                        <>
+                            {" "}and{" "}
+                            <span 
+                                className="text-black cursor-pointer"
+                                onClick={toggleUnlockedUsers}
+                            >
+                                {unlockedUsers.length - 1} {unlockedUsers.length - 1 === 1 ? "other" : "others"}
+                            </span>
+                        </>
+                    )}
+                </p>
+            )}
+
             {/* Comments Section */}
             {showComments && (
                 <div className="mt-4 border-t border-gray-300 pt-3 max-h-60 overflow-y-auto">
@@ -369,6 +406,38 @@ const Post = ({ post }) => {
                                     />
                                     <span className="text-sm font-medium text-black">
                                         {user.firstName} {user.lastName}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* Unlocked Users Modal */}
+            {showUnlockedUsers && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+                    onClick={toggleUnlockedUsers}>
+                    <div className="bg-gray-600 p-6 rounded-lg shadow-xl w-96 text-white relative"
+                        onClick={(e) => e.stopPropagation()}>
+                        
+                        <button className="absolute top-2 right-3 text-black hover:text-white text-2xl font-bold"
+                            onClick={toggleUnlockedUsers}>
+                            ×
+                        </button>
+
+                        <h2 className="text-black text-lg font-semibold border-b border-gray-900 pb-2 mb-4">Others who unlocked</h2>
+
+                        <ul className="max-h-60 overflow-y-auto">
+                            {unlockedUsers.slice(1).map(({ userId }) => (
+                                <li key={userId._id} className="flex items-center gap-3 mb-3">
+                                    <img 
+                                        src={userId.photoUrl} 
+                                        className="h-10 w-10 rounded-full border border-gray-600" 
+                                        alt="User" 
+                                    />
+                                    <span className="text-sm font-medium text-black">
+                                        {userId.firstName} {userId.lastName}
                                     </span>
                                 </li>
                             ))}

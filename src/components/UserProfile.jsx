@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { removeUserFromFeed } from "../utils/feedSlice";
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -16,6 +17,7 @@ const UserProfile = () => {
   const [savingBio, setSavingBio] = useState(false);
 
   const [isUserConnected, setIsUserConnected] = useState(false);
+  const [requestStatus, setRequestStatus] = useState("not_sent");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,12 +54,31 @@ const UserProfile = () => {
       const result = await axios.get(`${BASE_URL}/user/is-connected/${user?._id}`, {
         withCredentials: true,
       });
-      setIsUserConnected(result.data.isConnected);
+      if(result.data.isConnected) {
+        setIsUserConnected(result.data.isConnected);
+      }
     } catch (error) {
       console.error("Failed to check connection:", error);
       return false;
     }
   }
+
+  const fetchConnectionStatus = async () => {
+    try {
+      const result = await axios.get(`${BASE_URL}/request/status/${user._id}`, {
+        withCredentials: true,
+      });
+  
+      const status = result.data.status;
+      setRequestStatus(status);
+  
+      if (status === "accepted") {
+        setIsUserConnected(true);
+      }
+    } catch (error) {
+      console.error("Failed to fetch connection status", error);
+    }
+  };  
 
   useEffect(() => {
     fetchUser();
@@ -67,6 +88,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (user?._id && user._id !== loggedInUserId) {
       checkIfUsersConnected();
+      fetchConnectionStatus();
     }
   }, [user, loggedInUserId]);
 
@@ -127,6 +149,29 @@ const UserProfile = () => {
       setSavingBio(false);
     }
   };
+
+  const handleSendRequest = async (status, toUserId) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/request/sent/${status}/${toUserId}`,
+        {},
+        { withCredentials: true }
+      );
+  
+      // Only proceed if success response is confirmed
+      console.log("Request response:", res.data);
+      if (res.data?.success) {
+        setRequestStatus("interested");
+        dispatch(removeUserFromFeed(toUserId));
+      } else {
+        alert(res.data?.message || "Could not send request.");
+      }
+    } catch (error) {
+      console.error("Failed to send request:", error);
+      alert(error.response?.data?.message || "Could not send request.");
+    }
+  };
+  
   
 
   if (loading) return <div className="text-center mt-10 text-gray-500">Loading...</div>;
@@ -188,6 +233,31 @@ const UserProfile = () => {
                 <p className="whitespace-pre-line">{user.about || "No bio added yet."}</p>
             )}
           </div>
+            {/* Send connection request btn */}
+            {user._id !== loggedInUserId && !isUserConnected && (
+            ["not_sent", "ignored"].includes(requestStatus) ? (
+              <button
+                onClick={() => handleSendRequest("interested", user._id)}
+                className="mt-5 px-2 py-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+              >
+                Send Connection Request
+              </button>
+            ) : requestStatus === "interested" ? (
+              <button
+                disabled
+                className="mt-5 px-2 py-1 text-white bg-gray-500 rounded-lg cursor-not-allowed"
+              >
+                Connection Request Sent
+              </button>
+            ) : requestStatus === "rejected" ? (
+              <button
+                onClick={() => handleSendRequest("interested", user._id)}
+                className="mt-5 px-2 py-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+              >
+                Re-send Connection Request
+              </button>
+            ) : null
+          )}
         </div>
       </div>
 

@@ -16,6 +16,8 @@ const PostFeed = () => {
     const [showTooltip, setShowTooltip] = useState(false);
     const user = useSelector((store) => store.user);
 
+    const [recentPublicPosts, setRecentPublicPosts] = useState([]);
+
     const getPostFeed = async () => {
         try {
             const res = await axios.get(`${BASE_URL}/post/feed`, { withCredentials: true });
@@ -31,24 +33,72 @@ const PostFeed = () => {
         }
     };
 
+    const fetchRecentPublicPosts = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/post/recent-public-posts`, { withCredentials: true });
+            console.log("Recent public posts response:", res.data);
+
+            if (Array.isArray(res.data.posts)) {
+                setRecentPublicPosts(res.data.posts);
+            } else {
+                console.error("Invalid response format:", res.data);
+            }
+        } catch (err) {
+            console.error("Error fetching recent public posts:", err);
+        }
+    }
+
     useEffect(() => {
         if (!user?._id) return;
         getPostFeed();
+        fetchRecentPublicPosts();
     }, [user]);
 
+    // if (!posts?.length) {
+    //     return (
+    //         <div className="flex px-8 lg:px-8">
+    //             {/* Left - Sidebar */}
+    //             <div className="hidden lg:block w-2/12">
+    //                 <SideBar />
+    //             </div>
+    
+    //             {/* Center - Main Content */}
+    //             <div className="w-full lg:w-7/12 pt-4 px-4">
+    //                 <div className="flex flex-col items-center p-8 bg-gray-900 text-white rounded-xl shadow-lg">
+    //                     <div className="flex items-center justify-between w-full border-b border-gray-700 pb-4 mb-6">
+    //                         <h2 className="text-3xl font-semibold text-white">📢 Latest Posts</h2>
+    //                         <button
+    //                             className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
+    //                             onClick={() => navigate("/create-post")}
+    //                         >
+    //                             <img src="/create-post-icon.png" alt="Create post" className="h-6 w-6" />
+    //                             <span>Create Post</span>
+    //                         </button>
+    //                     </div>
+    //                      <p>Showing latest public posts. Start sending requests to familiarize you Post Feed.</p>
+    //                 </div>
+    //             </div>
+    
+    //             {/* Right - Friend Recommendations */}
+    //             <div className="hidden lg:block w-3/12">
+    //                 <FriendRecommendations />
+    //             </div>
+    //         </div>
+    //     );
+    // }
     if (!posts?.length) {
         return (
-            <div className="flex px-8 lg:px-8">
+            <div className="flex my-10 w-full gap-4 h-[100vh]">
                 {/* Left - Sidebar */}
                 <div className="hidden lg:block w-2/12">
                     <SideBar />
                 </div>
     
                 {/* Center - Main Content */}
-                <div className="w-full lg:w-7/12 pt-4 px-4">
-                    <div className="flex flex-col items-center p-8 bg-gray-900 text-white rounded-xl shadow-lg">
-                        <div className="flex items-center justify-between w-full border-b border-gray-700 pb-4 mb-6">
-                            <h2 className="text-3xl font-semibold text-white">📢 Latest Posts</h2>
+                <div className="w-full lg:w-7/12 overflow-y-auto mt-5 relative">
+                    <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+                        <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6">
+                            <h2 className="text-3xl font-semibold text-white">📢 Latest Public Posts</h2>
                             <button
                                 className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
                                 onClick={() => navigate("/create-post")}
@@ -57,9 +107,16 @@ const PostFeed = () => {
                                 <span>Create Post</span>
                             </button>
                         </div>
-                        <p className="text-gray-400 text-lg text-center">
-                            No posts available. Be the first to share something!
+    
+                        <p className="mb-4 text-md text-gray-500">
+                         👋 Looks like you're just getting started. Follow users or create a post to kick off your experience. Here's what others are sharing publicly!"
                         </p>
+    
+                        <div className="space-y-6 w-full max-w-3xl mx-auto">
+                            {recentPublicPosts.map((post) => (
+                                <Post key={post._id} post={post} />
+                            ))}
+                        </div>
                     </div>
                 </div>
     
@@ -69,7 +126,7 @@ const PostFeed = () => {
                 </div>
             </div>
         );
-    }
+    }    
 
     return (
         <div className="flex my-10 w-full gap-4 h-[100vh]">

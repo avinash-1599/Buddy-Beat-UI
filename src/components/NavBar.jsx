@@ -6,13 +6,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 import BackButton from "./BackButton";
+import GlobalUserSearch from "./GlobalUserSearch";
 
 const NavBar = () => {
     const user = useSelector((store) => store.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+    const [showSearch, setShowSearch] = useState(false);
 
     const dropdownRef = useRef();
 
@@ -58,14 +59,19 @@ const NavBar = () => {
                     <p className="text-sm">
                         Welcome, <span className="text-lg font-semibold text-yellow-300">{user.firstName}</span>
                     </p>
+                    <div className="flex items-center gap-3">
                     <img
                         src="/explore-users.webp"
                         alt="explore users"
                         className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
-                        onClick={() => navigate("/explore")}
+                        onClick={() => setShowSearch((prev) => !prev)}
                     />
-                    <div className="mr-6">
-                            <BackButton />
+                    {showSearch && (
+                        <GlobalUserSearch onClose={() => setShowSearch(false)} />
+                    )}
+                    <div className="ml-2">
+                        <BackButton />
+                    </div>
                     </div>
                 </div>
             )}
