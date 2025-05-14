@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const BackButton = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const BackButton = () => {
       onClick={handleBack}
       className="bg-gray-900 hover:bg-gray-500 text-gray-300 text-xs py-2 px-3 rounded"
     >
-       ⮐
+       <ArrowLeft size={20} />
     </button>
   );
 };
