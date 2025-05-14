@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
 
 
-const SideBar = () => {
+const SideBar = ( {onClose}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -49,6 +49,7 @@ const SideBar = () => {
     } else {
       navigate(item.path);
     }
+    if (onClose) onClose();
   };
 
   return (

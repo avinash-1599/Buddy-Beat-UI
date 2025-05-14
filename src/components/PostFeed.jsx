@@ -16,6 +16,8 @@ const PostFeed = () => {
     const [showTooltip, setShowTooltip] = useState(false);
     const user = useSelector((store) => store.user);
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     const [recentPublicPosts, setRecentPublicPosts] = useState([]);
 
     const getPostFeed = async () => {
@@ -56,17 +58,17 @@ const PostFeed = () => {
 
     // if (!posts?.length) {
     //     return (
-    //         <div className="flex px-8 lg:px-8">
+    //         <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4">
     //             {/* Left - Sidebar */}
     //             <div className="hidden lg:block w-2/12">
     //                 <SideBar />
     //             </div>
     
     //             {/* Center - Main Content */}
-    //             <div className="w-full lg:w-7/12 pt-4 px-4">
-    //                 <div className="flex flex-col items-center p-8 bg-gray-900 text-white rounded-xl shadow-lg">
-    //                     <div className="flex items-center justify-between w-full border-b border-gray-700 pb-4 mb-6">
-    //                         <h2 className="text-3xl font-semibold text-white">📢 Latest Posts</h2>
+    //             <div className="w-full lg:w-7/12 overflow-y-auto mt-5 px-4">
+    //                 <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+    //                     <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6">
+    //                         <h2 className="text-3xl font-semibold text-white">📢 Latest Public Posts</h2>
     //                         <button
     //                             className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
     //                             onClick={() => navigate("/create-post")}
@@ -75,7 +77,16 @@ const PostFeed = () => {
     //                             <span>Create Post</span>
     //                         </button>
     //                     </div>
-    //                      <p>Showing latest public posts. Start sending requests to familiarize you Post Feed.</p>
+    
+    //                     <p className="mb-4 text-md text-gray-500">
+    //                      👋 Looks like you're just getting started. Follow users or create a post to kick off your experience. Here's what others are sharing publicly!"
+    //                     </p>
+    
+    //                     <div className="space-y-6 w-full max-w-3xl mx-auto overflow-hidden break-words">
+    //                         {recentPublicPosts.map((post) => (
+    //                             <Post key={post._id} post={post} />
+    //                         ))}
+    //                     </div>
     //                 </div>
     //             </div>
     
@@ -85,59 +96,105 @@ const PostFeed = () => {
     //             </div>
     //         </div>
     //     );
-    // }
+    // }    
+
     if (!posts?.length) {
         return (
-            <div className="flex my-10 w-full gap-4 h-[100vh]">
-                {/* Left - Sidebar */}
-                <div className="hidden lg:block w-2/12">
-                    <SideBar />
+            <>
+                {/* Mobile-only toggle icon */}
+                <div className="lg:hidden fixed top-20 left-2 z-50">
+                    <button
+                        onClick={() => setIsSidebarOpen(prev => !prev)}
+                        className="bg-white text-black p-2 rounded-full shadow-md"
+                    >
+                        <img src="/menu-icon.png" alt="Menu" className="w-4 h-4" />
+                    </button>
                 </div>
     
-                {/* Center - Main Content */}
-                <div className="w-full lg:w-7/12 overflow-y-auto mt-5 relative">
-                    <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
-                        <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6">
-                            <h2 className="text-3xl font-semibold text-white">📢 Latest Public Posts</h2>
-                            <button
-                                className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
-                                onClick={() => navigate("/create-post")}
-                            >
-                                <img src="/create-post-icon.png" alt="Create post" className="h-6 w-6" />
-                                <span>Create Post</span>
-                            </button>
-                        </div>
+                {/* Mobile Sidebar Overlay */}
+                {isSidebarOpen && (
+                <div className="lg:hidden fixed inset-0 bg-black bg-opacity-60 z-40 flex top-8">
+                    <div className="w-1/2 max-w-[200px] h-full relative z-30">
+                        <SideBar onClose={() => setIsSidebarOpen(false)} />
+                    </div>
+                    <div className="flex-1" onClick={() => setIsSidebarOpen(false)} />
+                </div>
+                )}
     
-                        <p className="mb-4 text-md text-gray-500">
-                         👋 Looks like you're just getting started. Follow users or create a post to kick off your experience. Here's what others are sharing publicly!"
-                        </p>
+                <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4">
+                    {/* Left - Sidebar */}
+                    <div className="hidden lg:block w-2/12">
+                        <SideBar />
+                    </div>
     
-                        <div className="space-y-6 w-full max-w-3xl mx-auto">
-                            {recentPublicPosts.map((post) => (
-                                <Post key={post._id} post={post} />
-                            ))}
+                    {/* Center - Main Content */}
+                    <div className="w-full lg:w-7/12 overflow-y-auto mt-5 px-4">
+                        <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+                            <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6">
+                                <h2 className="text-3xl font-semibold text-white">📢 Latest Public Posts</h2>
+                                <button
+                                    className="flex items-center gap-2 px-2 py-1 text-black bg-white rounded-lg shadow hover:bg-yellow-400 transition-all"
+                                    onClick={() => navigate("/create-post")}
+                                >
+                                    <img src="/create-post-icon.png" alt="Create post" className="h-6 w-6" />
+                                    <span>Create Post</span>
+                                </button>
+                            </div>
+    
+                            <p className="mb-4 text-md text-gray-500">
+                                👋 Looks like you're just getting started. Follow users or create a post to kick off your experience. Here's what others are sharing publicly!
+                            </p>
+    
+                            <div className="space-y-6 w-full max-w-3xl mx-auto overflow-hidden break-words">
+                                {recentPublicPosts.map((post) => (
+                                    <Post key={post._id} post={post} />
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
     
-                {/* Right - Friend Recommendations */}
-                <div className="hidden lg:block w-3/12">
-                    <FriendRecommendations />
+                    {/* Right - Friend Recommendations */}
+                    <div className="hidden lg:block w-3/12">
+                        <FriendRecommendations />
+                    </div>
                 </div>
-            </div>
+            </>
         );
-    }    
+    }
+    
 
     return (
-        <div className="flex my-10 w-full gap-4 h-[100vh]">
+        <>
+            {/* Mobile-only toggle icon */}
+        <div className="lg:hidden fixed top-20 left-2 z-50">
+        <button
+            onClick={() => setIsSidebarOpen(prev => !prev)}
+            className="bg-white text-black p-2 rounded-full shadow-md"
+            >
+            <img src="/menu-icon.png" alt="Menu" className="w-4 h-4" />
+        </button>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+            <div className="lg:hidden fixed inset-0 bg-black bg-opacity-60 z-40 flex top-8">
+                <div className="w-1/2 max-w-[200px] h-full relative z-30">
+                    <SideBar onClose={() => setIsSidebarOpen(false)} />
+                </div>
+                <div className="flex-1" onClick={() => setIsSidebarOpen(false)} />
+            </div>
+        )}
+
+        {/* Main Content */}
+        <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4">
             
             {/* Left - Sidebar */}
-            <div className="hidden lg:block w-2/12">
-                <SideBar />
+            <div className="hidden lg:block lg:w-2/12 order-2 lg:order-1">
+            <SideBar />
             </div>
 
             {/* Center - Post Feed */}
-            <div className="w-full lg:w-7/12 overflow-y-auto mt-5 relative">
+            <div className="w-full lg:w-7/12 order-1 lg:order-2">
                 <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
                     <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6 relative">
                         <h2 className="text-2xl font-extrabold text-white">📢 Latest Posts</h2>
@@ -168,10 +225,12 @@ const PostFeed = () => {
             </div>
 
             {/* Right - Friend Recommendations */}
-            <div className="w-3/12 min-h-screen">
+            <div className="hidden lg:block lg:w-3/12 order-3">
             <FriendRecommendations />
             </div>
         </div>
+
+        </>
     );
 };
 

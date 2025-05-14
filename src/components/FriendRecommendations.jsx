@@ -174,7 +174,8 @@ const FriendRecommendations = () => {
                 {recommendations.slice(0, page * 5).map((rec) => (
                     <li
                         key={rec._id}
-                        className="flex items-center justify-between bg-gray-800 px-3 py-2 rounded-lg"
+                        className="flex items-center justify-between bg-gray-800 px-2 py-1 rounded-lg cursor-pointer"
+                        onClick={() => navigate(`/user/profile/${rec._id}`)}
                     >
                         <div className="flex items-center gap-3">
                             <img
@@ -191,12 +192,6 @@ const FriendRecommendations = () => {
                                 </p>
                             </div>
                         </div>
-                        <button
-                            onClick={() => navigate(`/user/profile/${rec._id}`)}
-                            className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500"
-                        >
-                            View
-                        </button>
                     </li>
                 ))}
             </ul>
