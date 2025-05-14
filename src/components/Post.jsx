@@ -131,8 +131,6 @@ const Post = ({ post }) => {
             const {data} = await axios.get(`${BASE_URL}/post/challenge/${postId}`,
                 { withCredentials: true }
             );
-            console.log("Unlocking post:", postId);
-            console.log("Challenge to unlock:", data.challenge);
             setChallengeToUnlock(data.challenge?.question);
             
         }catch(error) {

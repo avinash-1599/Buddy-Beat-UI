@@ -45,7 +45,6 @@ const FriendRecommendations = () => {
                 });
 
                 const newRecs = res.data?.recommendations || [];
-                console.log("Recommendations:", newRecs);
 
                 // If less than 5 results returned, assume no more pages
                 if (newRecs.length < 5) setHasMore(false);

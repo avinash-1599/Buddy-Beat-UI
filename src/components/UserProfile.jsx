@@ -158,8 +158,6 @@ const UserProfile = () => {
         { withCredentials: true }
       );
   
-      // Only proceed if success response is confirmed
-      console.log("Request response:", res.data);
       if (res.data?.success) {
         setRequestStatus("interested");
         dispatch(removeUserFromFeed(toUserId));

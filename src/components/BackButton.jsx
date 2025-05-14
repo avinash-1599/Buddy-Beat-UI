@@ -1,9 +1,16 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BackButton = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleBack = () => {
+    const isFromLogin = location.state?.fromLogin;
+    const isMainPage = location.pathname === "/post/feed";
+    if (isMainPage && isFromLogin) {
+      // Don't go back if we came from login
+      return;
+    }
     navigate(-1); // Go one step back in history
   };
 

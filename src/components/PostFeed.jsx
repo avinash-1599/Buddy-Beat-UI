@@ -38,7 +38,6 @@ const PostFeed = () => {
     const fetchRecentPublicPosts = async () => {
         try {
             const res = await axios.get(`${BASE_URL}/post/recent-public-posts`, { withCredentials: true });
-            console.log("Recent public posts response:", res.data);
 
             if (Array.isArray(res.data.posts)) {
                 setRecentPublicPosts(res.data.posts);

@@ -54,26 +54,43 @@ const NavBar = () => {
             </div>
 
             {/* Center Section - Welcome Message */}
+            {/* Desktop View */}
             {user && (
-                <div className="hidden md:flex flex-1 justify-center items-center space-x-4">
-                    <p className="text-sm">
-                        Welcome, <span className="text-lg font-semibold text-yellow-300">{user.firstName}</span>
-                    </p>
-                    <div className="flex items-center gap-3">
-                    <img
-                        src="/explore-users.webp"
-                        alt="explore users"
-                        className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
-                        onClick={() => setShowSearch((prev) => !prev)}
-                    />
-                    {showSearch && (
-                        <GlobalUserSearch onClose={() => setShowSearch(false)} />
-                    )}
-                    <div className="ml-2">
-                        <BackButton />
-                    </div>
-                    </div>
+            <div className="hidden md:flex flex-1 justify-center items-center space-x-4">
+                <p className="text-sm">
+                Welcome, <span className="text-lg font-semibold text-yellow-300">{user.firstName}</span>
+                </p>
+                <div className="flex items-center gap-3">
+                <img
+                    src="/explore-users.webp"
+                    alt="explore users"
+                    className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
+                    onClick={() => setShowSearch((prev) => !prev)}
+                />
+                {showSearch && (
+                    <GlobalUserSearch onClose={() => setShowSearch(false)} />
+                )}
+                <div className="ml-2">
+                    <BackButton />
                 </div>
+                </div>
+            </div>
+            )}
+
+            {/* Mobile View */}
+            {user && (
+            <div className="flex md:hidden items-center space-x-3">
+                <img
+                src="/explore-users.webp"
+                alt="explore users"
+                className="h-8 w-8 cursor-pointer border border-black rounded-lg bg-cyan-400"
+                onClick={() => setShowSearch((prev) => !prev)}
+                />
+                {showSearch && (
+                <GlobalUserSearch onClose={() => setShowSearch(false)} />
+                )}
+                <BackButton />
+            </div>
             )}
 
             {/* Right Section - Icons & Profile */}

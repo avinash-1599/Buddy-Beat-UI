@@ -15,7 +15,6 @@ const LoginUsingOTP = () => {
   const handleSendOTP = async () => {
     if (emailId.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
       try {
-        console.log("Sending OTP to:", emailId);
         await axios.post(BASE_URL + "/send/otp", { emailId });
         setStep("otp");
       } catch (err) {
@@ -35,11 +34,10 @@ const LoginUsingOTP = () => {
         },
         { withCredentials: true } // Include credentials for session management);
         );
-        console.log("OTP verification response:", res.data);
 
         if (res.data.data) {
           dispatch(addUser(res.data.data));
-          navigate("/post/feed"); // redirect to home page after successful login
+          navigate("/post/feed");
         }
 
         // Clear inputs

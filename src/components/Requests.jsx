@@ -30,8 +30,6 @@ const Requests = () => {
         fetchRequests();
     }, []);
 
-    console.log("Requests:", requests);
-
     if (!requests) return null;
 
     if (requests.length === 0) return <h1 className="flex justify-center my-10 text-xl text-white font-semibold">No Requests Found</h1>;
