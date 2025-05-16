@@ -6,6 +6,9 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
+import Cropper from "react-easy-crop";
+import getCroppedImg from "../utils/cropImage";
+
 const EditProfile = ({ user }) => {
     const [firstName, setFirstName] = useState(user?.firstName || "");
     const [lastName, setLastName] = useState(user?.lastName || "");
@@ -17,16 +20,55 @@ const EditProfile = ({ user }) => {
     const [toastMsg, setToastMsg] = useState(false);
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
+
+    // profile photo upload Cropper state
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [showCropper, setShowCropper] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
+
     
     const genderOptions = ["male", "female", "others"];
     const dispatch = useDispatch();
 
-    const handleFileChange = (event) => {
-        const selectedFile = event.target.files[0];
-        if (selectedFile) {
-            setFile(selectedFile);
+    const onCropComplete = (_, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    };    
+
+    const handleCrop = async () => {
+        try {
+            const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
+            const croppedFile = new File([croppedBlob], "profile.jpg", { type: "image/jpeg" });
+            setFile(croppedFile);
+            setShowCropper(false);
+            await uploadImageToS3();
+        } catch (e) {
+            console.error("Cropping failed", e);
+            setError("Image cropping failed.");
         }
     };
+
+    const readFile = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => resolve(reader.result));
+            reader.readAsDataURL(file);
+        });
+    };    
+
+    const handleFileChange = async (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile); // Keeps the file for upload
+    
+            // Read the file as base64 and set the image source for cropping
+            const imageDataUrl = await readFile(selectedFile);
+            setImageSrc(imageDataUrl); // Sets the base64 image for the cropper
+            setShowCropper(true);      // Opens the cropper modal
+        }
+    };
+    
 
     const uploadImageToS3 = async () => {
         if (!file) return;
@@ -147,6 +189,35 @@ const EditProfile = ({ user }) => {
                         <span>Profile updated successfully.</span>
                     </div>
                 </div>
+            )}
+
+            {/* Cropper Modal */}
+            {showCropper && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+                <div className="bg-white p-4 rounded-lg w-[60vw] h-[60vh] flex flex-col items-center justify-between">
+                    
+                    {/* Cropper Area */}
+                    <div className="relative w-full h-full">
+                        <Cropper
+                            image={imageSrc}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={1}
+                            onCropChange={setCrop}
+                            onZoomChange={setZoom}
+                            onCropComplete={onCropComplete}
+                            objectFit="contain"
+                        />
+                    </div>
+            
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-4 mt-4 w-full">
+                        <button className="btn btn-secondary" onClick={() => setShowCropper(false)}>Cancel</button>
+                        <button className="btn btn-primary" onClick={handleCrop}>Crop & Upload</button>
+                    </div>
+                </div>
+            </div>
+            
             )}
         </div>
     );
