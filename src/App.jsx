@@ -21,6 +21,7 @@ import BasicSettings from './components/BasicSettings';
 import SavedContent from './components/SavedPosts';
 import ChatPage from './components/ChatPage';
 import PostPage from './components/PostPage';
+import StoryUpload from './components/StoryUpload';
 
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
           <Route path='/premium' element={<Premium></Premium>} />
           <Route path="/forgot-password" element={<ForgotPassword></ForgotPassword>} />
           <Route path="/create-post" element={<PostLayout></PostLayout>} />
+          <Route path="/create-story" element={<StoryUpload></StoryUpload>} />
           <Route path="/post/feed" element={<PostFeed></PostFeed>} />
           <Route path="/post/:postId" element={<PostPage />} />
           <Route path="/user/profile/:userId" element={<UserProfile></UserProfile>} />

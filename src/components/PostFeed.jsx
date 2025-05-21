@@ -7,13 +7,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FriendRecommendations from "./FriendRecommendations";
 import SideBar from "./SideBar";
+import StoriesFeed from "./StoriesFeed";
 
 const PostFeed = () => {
     const postFeed = useSelector((store) => store.post);
     const posts = postFeed?.posts || [];
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [showTooltip, setShowTooltip] = useState(false);
+    const [showPostTooltip, setShowPostTooltip] = useState(false);
+    const [showStoryTooltip, setShowStoryTooltip] = useState(false);
+
     const user = useSelector((store) => store.user);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -112,7 +115,7 @@ const PostFeed = () => {
                             </div>
     
                             <p className="mb-4 text-md text-gray-500">
-                                👋 Looks like you're just getting started. Follow users or create a post to kick off your experience. Here's what others are sharing publicly!
+                                👋 Looks like you are just getting started. Follow users or create a post to kick off your experience. Here is what others are sharing publicly!
                             </p>
     
                             <div className="space-y-6 w-full max-w-3xl mx-auto overflow-hidden break-words">
@@ -165,21 +168,49 @@ const PostFeed = () => {
 
             {/* Center - Post Feed */}
             <div className="w-full lg:w-7/12 order-1 lg:order-2">
+                    {/* stories feed */}
+                    <div className="mb-3 mt-5">
+                    <div className="p-4 bg-gray-900 text-white rounded-lg shadow-lg">
+                        <div className="flex items-center justify-between ml-5 mr-3">
+                            <h3 className="text-xl font-semibold text-white px-2">📸 Stories</h3>
+                            <div
+                            className="relative flex items-center"
+                            onClick={() => navigate("/create-story")}
+                            onMouseEnter={() => setShowStoryTooltip(true)}
+                            onMouseLeave={() => setShowStoryTooltip(false)}
+                            >
+                            <img
+                                src="/create-post-icon.png"
+                                alt="Create story"
+                                className="h-8 w-8 cursor-pointer bg-white p-1 border border-black rounded-full hover:shadow-md transition-transform transform hover:scale-110"
+                            />
+                            {showStoryTooltip && (
+                                <span className="absolute right-full mr-2 bg-black text-white text-sm px-3 py-1 rounded-md whitespace-nowrap z-50 shadow-lg top-1/2 -translate-y-1/2">
+                                Add a new story
+                                </span>
+                            )}
+                            </div>
+                        </div>
+
+                        <StoriesFeed />
+                        </div>
+                    </div>
                 <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+
                     <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6 relative">
-                        <h2 className="text-2xl font-extrabold text-white ml-5">📢 Latest Posts</h2>
+                        <h2 className="text-xl font-semibold text-white ml-5">📢 Latest Posts</h2>
                         <div
                             className="relative flex items-center"
-                            onMouseEnter={() => setShowTooltip(true)}
-                            onMouseLeave={() => setShowTooltip(false)}
+                            onMouseEnter={() => setShowPostTooltip(true)}
+                            onMouseLeave={() => setShowPostTooltip(false)}
                         >
                             <img
                                 src="/create-post-icon.png"
                                 alt="Create post"
-                                className="h-10 w-10 cursor-pointer bg-white p-1 border border-black rounded-full hover:shadow-md transition-transform transform hover:scale-110"
+                                className="h-8 w-8 cursor-pointer bg-white p-1 border border-black rounded-full hover:shadow-md transition-transform transform hover:scale-110"
                                 onClick={() => navigate("/create-post")}
                             />
-                            {showTooltip && (
+                            {showPostTooltip && (
                             <span className="absolute right-full mr-2 bg-black text-white text-sm px-3 py-1 rounded-md whitespace-nowrap z-50 shadow-lg top-1/2 -translate-y-1/2">
                                 Create a new post
                             </span>
