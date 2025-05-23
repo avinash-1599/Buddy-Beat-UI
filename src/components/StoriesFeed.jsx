@@ -4,6 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import { BASE_URL } from '../utils/constants';
 import { useSelector } from 'react-redux';
+import { Trash2 } from 'lucide-react';
 
 Modal.setAppElement('#root');
 
@@ -50,6 +51,27 @@ const StoriesFeed = () => {
     }
     setLoading(false);
   };
+
+  const handleDeleteStory = async () => {
+    try {
+      const currentGroup = groupedStories[activeUserId];
+      const storyId = currentGroup.stories[activeIndex]._id;
+  
+      await axios.delete(`${BASE_URL}/story/${storyId}`, { withCredentials: true });
+  
+      const remainingStories = currentGroup.stories.length - 1;
+  
+      if (remainingStories === 0) {
+        closeModal(); // no more stories for user
+      } else {
+        setActiveIndex(prev => (prev > 0 ? prev - 1 : 0)); // shift to previous if possible
+      }
+  
+      fetchStories(); // fetch latest stories from backend
+    } catch (err) {
+      console.error('Error deleting story:', err);
+    }
+  };  
 
   useEffect(() => {
     fetchStories();
@@ -149,14 +171,24 @@ const StoriesFeed = () => {
           onRequestClose={closeModal}
           style={customModalStyles}
         >
-          <button onClick={closeModal} className="absolute top-8 right-3 text-white text-2xl">✕</button>
+          {/* <button onClick={closeModal} className="absolute top-8 right-3 text-white text-2xl">✕</button> */}
+          <div className="absolute top-6 right-4 flex items-center gap-4">
+            <button
+                onClick={handleDeleteStory}
+                className="p-1 hover:text-red-500 transition-colors"
+                aria-label="Delete story"
+            >
+                <Trash2 size={24} color="white" />
+            </button>
+            <button
+                onClick={closeModal}
+                className="text-white text-2xl p-1 hover:text-gray-300 transition-colors"
+                aria-label="Close modal"
+            >
+                ✕
+            </button>
+            </div>
           {/* story progress bar */}
-          {/* <div className="w-full h-1 bg-gray-700 rounded overflow-hidden mb-4">
-            <div
-                className="h-full bg-gray-400 transition-all duration-100 linear"
-                style={{ width: `${progress}%` }}
-            />
-          </div> */}
           <div className="flex gap-1 mb-4">
             {groupedStories[activeUserId].stories.map((_, i) => (
                 <div key={i} className="flex-1 h-1 bg-gray-700 rounded overflow-hidden">
@@ -186,25 +218,50 @@ const StoriesFeed = () => {
             </span>
           </div>
 
-          <div className="flex flex-col items-center text-center">
+          <div className="relative flex flex-col items-center text-center w-full">
             {groupedStories[activeUserId].stories[activeIndex].mediaType === 'image' ? (
-              <img
+                <img
                 src={groupedStories[activeUserId].stories[activeIndex].mediaUrl}
                 alt="Story"
                 className="h-[70vh] w-auto max-w-full object-contain rounded-md"
-              />
+                />
             ) : (
-              <video
+                <video
                 src={groupedStories[activeUserId].stories[activeIndex].mediaUrl}
                 controls
                 autoPlay
                 muted
                 className="h-[70vh] w-auto max-w-full object-contain rounded-md"
-              />
+                />
             )}
 
+            {/* LEFT (Previous) Click Area */}
+            <div
+                className="absolute left-0 top-0 h-full w-1/2 cursor-pointer"
+                onClick={() => {
+                if (activeIndex > 0) {
+                    setActiveIndex((prev) => prev - 1);
+                } else {
+                    closeModal();
+                }
+                }}
+            />
+
+            {/* RIGHT (Next) Click Area */}
+            <div
+                className="absolute right-0 top-0 h-full w-1/2 cursor-pointer"
+                onClick={() => {
+                const currentStories = groupedStories[activeUserId].stories;
+                if (activeIndex < currentStories.length - 1) {
+                    setActiveIndex((prev) => prev + 1);
+                } else {
+                    closeModal();
+                }
+                }}
+            />
+
             {groupedStories[activeUserId].stories[activeIndex].caption && (
-                <div className="text-white text-sm mt-2">
+                <div className="text-white text-sm mt-2 z-10 relative">
                 {groupedStories[activeUserId].stories[activeIndex].caption}
                 </div>
             )}
