@@ -4,7 +4,9 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import { BASE_URL } from '../utils/constants';
 import { useSelector } from 'react-redux';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
@@ -38,8 +40,12 @@ const StoriesFeed = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [storyViewers, setStoryViewers] = useState([]);
+  const [isViewingViewers, setIsViewingViewers] = useState(false);
 
   const loggedInUserId = useSelector(state => state.user?._id);
+
+  const navigate = useNavigate();
 
   const fetchStories = async () => {
     setLoading(true);
@@ -73,6 +79,28 @@ const StoriesFeed = () => {
     }
   };  
 
+  const markStoryAsViewed = async (storyId) => {
+    try {
+      await axios.post(`${BASE_URL}/story/${storyId}/view`, {}, { withCredentials: true });
+    } catch (err) {
+      console.error('Error marking story as viewed:', err);
+    }
+  };
+
+  const handleStoryViewers = async () => {
+    try{
+        const currentGroup = groupedStories[activeUserId];
+        const currentStoryId = currentGroup.stories[activeIndex]._id;
+        const res = await axios.get(`${BASE_URL}/story/${currentStoryId}/viewers`, { withCredentials: true });
+        const viewers = res.data;
+        console.log('Story viewers frontend:', viewers);
+        setStoryViewers(viewers);
+        setIsViewingViewers(true);
+    } catch (err) {
+        console.error('Error fetching story viewers:', err);
+    }
+  };
+
   useEffect(() => {
     fetchStories();
   }, []);
@@ -92,13 +120,21 @@ const StoriesFeed = () => {
     return 0;
   });
   
-
   useEffect(() => {
     let timer;
     let progressTimer;
+    let viewTimer;
   
-    if (isModalOpen && activeUserId) {
+    if (isModalOpen && activeUserId && !isViewingViewers) {
       setProgress(0); // reset progress
+  
+      const currentStories = groupedStories[activeUserId].stories;
+      const currentStory = currentStories[activeIndex];
+  
+      // ✅ Mark story as viewed after 1s
+      viewTimer = setTimeout(() => {
+        markStoryAsViewed(currentStory._id);
+      }, 1000);
   
       // Animate progress bar over 5s
       progressTimer = setInterval(() => {
@@ -106,11 +142,10 @@ const StoriesFeed = () => {
           if (prev >= 100) return 100;
           return prev + 2;
         });
-      }, 100); // 100ms interval (50 steps = 5s)
+      }, 100);
   
-      // Story change timer
+      // Move to next story after 5s
       timer = setTimeout(() => {
-        const currentStories = groupedStories[activeUserId].stories;
         if (activeIndex < currentStories.length - 1) {
           setActiveIndex(i => i + 1);
         } else {
@@ -122,9 +157,9 @@ const StoriesFeed = () => {
     return () => {
       clearTimeout(timer);
       clearInterval(progressTimer);
+      clearTimeout(viewTimer);
     };
-  }, [activeIndex, isModalOpen, activeUserId]);
-  
+  }, [activeIndex, isModalOpen, activeUserId, isViewingViewers]);
 
   const openModal = userId => {
     setActiveUserId(userId);
@@ -136,6 +171,8 @@ const StoriesFeed = () => {
     setIsModalOpen(false);
     setActiveUserId(null);
     setActiveIndex(0);
+    setIsViewingViewers(false);
+    setStoryViewers([]);
   };
 
   return (
@@ -171,8 +208,14 @@ const StoriesFeed = () => {
           onRequestClose={closeModal}
           style={customModalStyles}
         >
-          {/* <button onClick={closeModal} className="absolute top-8 right-3 text-white text-2xl">✕</button> */}
-          <div className="absolute top-6 right-4 flex items-center gap-4">
+          {groupedStories[activeUserId].user._id === loggedInUserId && (<div className="absolute top-6 right-4 flex items-center gap-4">
+          <button
+                onClick={handleStoryViewers}
+                className="p-1 hover:text-red-500 transition-colors"
+                aria-label="List story viewers"
+            >
+                <Eye size={24} color="white" />
+            </button>
             <button
                 onClick={handleDeleteStory}
                 className="p-1 hover:text-red-500 transition-colors"
@@ -187,7 +230,7 @@ const StoriesFeed = () => {
             >
                 ✕
             </button>
-            </div>
+            </div>)}
           {/* story progress bar */}
           <div className="flex gap-1 mb-4">
             {groupedStories[activeUserId].stories.map((_, i) => (
@@ -211,9 +254,10 @@ const StoriesFeed = () => {
             <img
               src={groupedStories[activeUserId].user.photoUrl || '/default-avatar.png'}
               alt="User"
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 rounded-full cursor-pointer"
+              onClick={() => navigate(`/user/profile/${groupedStories[activeUserId].user?._id}`)}
             />
-            <span className="text-white text-sm font-semibold">
+            <span className="text-white text-sm font-semibold cursor-pointer" onClick={() => navigate(`/user/profile/${groupedStories[activeUserId].user?._id}`)}>
               {groupedStories[activeUserId].user.firstName} {groupedStories[activeUserId].user.lastName}
             </span>
           </div>
@@ -236,7 +280,7 @@ const StoriesFeed = () => {
             )}
 
             {/* LEFT (Previous) Click Area */}
-            <div
+            {/* <div
                 className="absolute left-0 top-0 h-full w-1/2 cursor-pointer"
                 onClick={() => {
                 if (activeIndex > 0) {
@@ -245,10 +289,10 @@ const StoriesFeed = () => {
                     closeModal();
                 }
                 }}
-            />
+            /> */}
 
             {/* RIGHT (Next) Click Area */}
-            <div
+            {/* <div
                 className="absolute right-0 top-0 h-full w-1/2 cursor-pointer"
                 onClick={() => {
                 const currentStories = groupedStories[activeUserId].stories;
@@ -258,13 +302,62 @@ const StoriesFeed = () => {
                     closeModal();
                 }
                 }}
-            />
+            /> */}
+
+            {/* LEFT (Previous) Click Area */}
+            <div className="absolute left-0 top-0 h-full w-1/2 pointer-events-none">
+              <div
+                className="w-full h-full cursor-pointer pointer-events-auto"
+                onClick={() => {
+                  if (activeIndex > 0) {
+                    setActiveIndex((prev) => prev - 1);
+                  } else {
+                    closeModal();
+                  }
+                }}
+              />
+            </div>
+
+            {/* RIGHT (Next) Click Area */}
+            <div className="absolute right-0 top-0 h-full w-1/2 pointer-events-none">
+              <div
+                className="w-full h-full cursor-pointer pointer-events-auto"
+                onClick={() => {
+                  const currentStories = groupedStories[activeUserId].stories;
+                  if (activeIndex < currentStories.length - 1) {
+                    setActiveIndex((prev) => prev + 1);
+                  } else {
+                    closeModal();
+                  }
+                }}
+              />
+            </div>
 
             {groupedStories[activeUserId].stories[activeIndex].caption && (
                 <div className="text-white text-sm mt-2 z-10 relative">
                 {groupedStories[activeUserId].stories[activeIndex].caption}
                 </div>
             )}
+
+            {/* story viewers */}
+            {storyViewers.length > 0 && groupedStories[activeUserId].user._id === loggedInUserId && (
+            <div className="text-left mt-2 w-full">
+              <h3 className="text-white font-semibold mb-2 text-sm">Viewed by:</h3>
+              <hr className="border-gray-600 mb-3" />
+              <div className="flex flex-col gap-3">
+                {storyViewers.map((viewer) => (
+                  <div key={viewer._id} className="flex items-center gap-2 text-white text-xs">
+                    <img
+                      src={viewer.photoUrl || '/default-avatar.png'}
+                      alt={`${viewer.firstName} ${viewer.lastName}`}
+                      className="w-6 h-6 rounded-full"
+                    />
+                    <span className='text-gray-400 cursor-pointer'>{viewer.firstName} {viewer.lastName}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
             </div>
         </Modal>
       )}
