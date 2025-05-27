@@ -94,14 +94,41 @@ const PostFeed = () => {
                 </div>
                 )}
     
-                <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4">
+                <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4 lg:h-screen lg:overflow-hidden">
                     {/* Left - Sidebar */}
-                    <div className="hidden lg:block w-2/12">
+                    <div className="hidden lg:block w-2/12 lg:overflow-y-auto bg-gray-900 mt-5">
                         <SideBar />
                     </div>
     
                     {/* Center - Main Content */}
-                    <div className="w-full lg:w-7/12 overflow-y-auto mt-5 px-4">
+                    <div className="w-full lg:w-7/12 overflow-y-auto mt-5 px-4 lg:overflow-y-auto">
+                        {/* Stories Feed */}
+                        <div className="mb-3 mt-1">
+                            <div className="p-4 bg-gray-900 text-white rounded-lg shadow-lg">
+                                <div className="flex items-center justify-between ml-5 mr-3">
+                                    <h3 className="text-xl font-semibold text-white px-2">📸 Stories</h3>
+                                    <div
+                                    className="relative flex items-center"
+                                    onClick={() => navigate("/create-story")}
+                                    onMouseEnter={() => setShowStoryTooltip(true)}
+                                    onMouseLeave={() => setShowStoryTooltip(false)}
+                                    >
+                                    <img
+                                        src="/create-post-icon.png"
+                                        alt="Create story"
+                                        className="h-8 w-8 cursor-pointer bg-white p-1 border border-black rounded-full hover:shadow-md transition-transform transform hover:scale-110"
+                                    />
+                                    {showStoryTooltip && (
+                                        <span className="absolute right-full mr-2 bg-black text-white text-sm px-3 py-1 rounded-md whitespace-nowrap z-50 shadow-lg top-1/2 -translate-y-1/2">
+                                        Add a new story
+                                        </span>
+                                    )}
+                                    </div>
+                                </div>
+
+                                <StoriesFeed />
+                                </div>
+                        </div>
                         <div className="p-6 bg-gray-900 text-white rounded-lg shadow-lg">
                             <div className="flex items-center justify-between border-b border-gray-700 pb-4 mb-6">
                                 <h2 className="text-3xl font-semibold text-white ml-10">📢 Latest Public Posts</h2>
@@ -127,7 +154,7 @@ const PostFeed = () => {
                     </div>
     
                     {/* Right - Friend Recommendations */}
-                    <div className="hidden lg:block w-3/12">
+                    <div className="hidden lg:block w-3/12 lg:overflow-y-auto">
                         <FriendRecommendations />
                     </div>
                 </div>
@@ -159,15 +186,16 @@ const PostFeed = () => {
                 )}
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4">
+        <div className="flex flex-col lg:flex-row my-10 w-full gap-4 px-2 sm:px-4 lg:h-screen lg:overflow-hidden">
             
             {/* Left - Sidebar */}
-            <div className="hidden lg:block lg:w-2/12 order-2 lg:order-1">
+            {/* <div className="hidden lg:block lg:w-2/12 order-2 lg:order-1"> */}
+            <div className="hidden lg:block lg:w-2/12 lg:overflow-y-auto bg-gray-900">
             <SideBar />
             </div>
 
             {/* Center - Post Feed */}
-            <div className="w-full lg:w-7/12 order-1 lg:order-2">
+            <div className="w-full lg:w-7/12 order-1 lg:order-2 lg:overflow-y-auto">
                     {/* stories feed */}
                     <div className="mb-3 mt-5">
                     <div className="p-4 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -226,7 +254,7 @@ const PostFeed = () => {
             </div>
 
             {/* Right - Friend Recommendations */}
-            <div className="hidden lg:block lg:w-3/12 order-3">
+            <div className="hidden lg:block lg:w-3/12 order-3 lg:overflow-y-auto">
             <FriendRecommendations />
             </div>
         </div>

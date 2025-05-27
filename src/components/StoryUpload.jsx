@@ -68,61 +68,10 @@ const StoryUpload = () => {
     }
   };
 
-//   return (
-//     <div className="max-w-md mx-auto mt-6 mb-6 p-6 bg-gray-500 shadow-lg rounded-lg border border-gray-200">
-//       <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Upload a Story</h2>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <input
-//           type="file"
-//           accept="image/*,video/*"
-//           onChange={handleFileChange}
-//           className="block w-full text-sm text-gray-700 bg-gray-100 rounded border border-gray-300 cursor-pointer p-2"
-//         />
-
-//         {previewUrl && (
-//           <div className="mt-2">
-//             {file.type.startsWith('image') ? (
-//               <img src={previewUrl} alt="Preview" className="w-full rounded-md shadow-md" />
-//             ) : (
-//               <video src={previewUrl} controls className="w-full rounded-md shadow-md" />
-//             )}
-//           </div>
-//         )}
-
-//         <input
-//           type="text"
-//           value={caption}
-//           onChange={(e) => setCaption(e.target.value)}
-//           placeholder="Write a caption..."
-//           className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-//         />
-
-//         <select
-//         value={duration}
-//         onChange={(e) => setDuration(e.target.value)}
-//         className="w-full p-2 rounded bg-gray-600 text-white"
-//         >
-//         <option value="" disabled hidden>Select duration</option>
-//         <option value={3600}>1 Hour</option>
-//         <option value={14400}>4 Hour</option>
-//         <option value={28800}>8 Hours</option>
-//         <option value={43200}>12 Hours</option>
-//         <option value={86400}>24 Hours</option>
-//         <option value={172800}>48 Hours</option>
-//         </select>
-
-//         <button
-//           type="submit"
-//           disabled={isUploading}
-//           className={`w-full py-2 text-white rounded ${isUploading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'} transition duration-200`}
-//         >
-//           {isUploading ? 'Uploading...' : 'Upload Story'}
-//         </button>
-//       </form>
-//     </div>
-//   );
 return (
-    <div className="max-w-md mx-auto mt-6 mb-6 p-6 bg-gray-500 shadow-lg rounded-lg border border-gray-200 overflow-y-auto max-h-[80vh]">
+    // <div className="max-w-md mx-auto mt-6 mb-6 p-6 bg-gray-500 shadow-lg rounded-lg border border-gray-200 overflow-y-auto max-h-[80vh]">
+    
+    <div className="w-full sm:max-w-md mx-auto mt-6 mb-6 p-4 sm:p-6 bg-gray-500 shadow-lg rounded-lg border border-gray-200 overflow-y-auto max-h-[90vh]">
       <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Upload a Story</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
