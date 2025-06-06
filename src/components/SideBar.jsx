@@ -8,21 +8,30 @@ import {
   GemIcon,
   User,
   LogOut,
-  MessageCircle
+  MessageCircle,
+  LayoutDashboardIcon
 } from "lucide-react";
 
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
 
 
+// eslint-disable-next-line react/prop-types
 const SideBar = ( {onClose}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user);
+  const isPremium = user?.isPremium || false;
+  const membershipType = user?.membershipType;
+
   const navItems = [
+    ...(isPremium && (membershipType === "Gold" || membershipType === "Platinum")
+      ? [{ name: "Dashboard", icon: <LayoutDashboardIcon />, path: "/dashboard" }]
+      : []),
     { name: "Home", icon: <Home />, path: "/post/feed" },
     { name: "Explore", icon: <UserSearchIcon />, path: "/explore" },
     { name: "Saved", icon: <Bookmark />, path: "/saved" },

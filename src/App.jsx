@@ -22,6 +22,7 @@ import SavedContent from './components/SavedPosts';
 import ChatPage from './components/ChatPage';
 import PostPage from './components/PostPage';
 import StoryUpload from './components/StoryUpload';
+import Dashboard from './components/Dashboard';
 
 
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/settings" element={<BasicSettings></BasicSettings>} />
           <Route path="/saved" element={<SavedContent></SavedContent>} />
           <Route path="/messages" element={<ChatPage></ChatPage>} />
+          <Route path="/dashboard" element={<Dashboard></Dashboard>} />
         </Route>
         <Route path="/reset-password/:resetToken" element={<ResetPassword></ResetPassword>} />
       </Routes>

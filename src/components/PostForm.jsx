@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
@@ -21,6 +21,9 @@ const PostForm = ({ setPreviewMedia, setPostContent, setPostLocation, setIsLocke
   const [challengeData, setChallengeData] = useState(null);
 
   const [location, setLocation] = useState(null);
+
+  const user = useSelector((state) => state.user);
+  const isPremium = user?.isPremium || false;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -189,16 +192,20 @@ const PostForm = ({ setPreviewMedia, setPostContent, setPostLocation, setIsLocke
           </span>
         </label>
 
-        <label className="relative inline-flex items-center cursor-pointer">
+        <label className={`relative inline-flex items-center ${isPremium ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
           <input
             type="checkbox"
             id="post-toggle"
             className="sr-only peer"
             checked={isLocked === "locked"}
             onChange={toggleLock}
+            disabled={!isPremium}
           />
           <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer dark:bg-gray-600 peer-checked:bg-blue-500 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
         </label>
+        {!isPremium && (
+          <span className="text-sm text-gray-500 mt-1 ml-1">Requires Silver plan or higher.</span>
+        )}
       </div>
 
       {isLocked === "locked" && (
