@@ -12,8 +12,7 @@ const Premium = () => {
       name: "Silver",
       price: "Rs.25 for 3 months",
       benefits: [
-        "Access to share posts as locked", 
-        "Allow friends to view locked posts"
+        "Access to share posts as locked"
       ],
       color: "bg-gray-300 text-black",
     },
