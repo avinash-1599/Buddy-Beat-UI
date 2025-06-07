@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 const Post = ({ post }) => {
     const user = useSelector((store) => store.user);
     const currentUserId = user?._id;
-    const [isLiked, setIsLiked] = useState(post.likes.includes(currentUserId));
-    const [likeCount, setLikeCount] = useState(post.likes.length);
+    const [isLiked, setIsLiked] = useState(post.likes?.includes(currentUserId));
+    const [likeCount, setLikeCount] = useState(post.likes?.length);
     const [likedUsers, setLikedUsers] = useState([]); 
     const [showLikedUsers, setShowLikedUsers] = useState(false);
     const [comments, setComments] = useState([]);
@@ -29,7 +29,7 @@ const Post = ({ post }) => {
 
     const { content, media, createdAt, _id: postId, isLocked, location } = post;
 
-    const [isSaved, setIsSaved] = useState(user.savedPosts.includes(postId) ?? false);
+    const [isSaved, setIsSaved] = useState(user?.savedPosts?.includes(postId) ?? false);
     
     const firstName = post?.userId?.firstName || "Unknown";
     const lastName = post?.userId?.lastName || "";
@@ -41,13 +41,13 @@ const Post = ({ post }) => {
 
     useEffect(() => {
         setIsLiked(Array.isArray(post.likes) && post.likes.includes(currentUserId));
-        setIsSaved(Array.isArray(user.savedPosts) && user.savedPosts.includes(postId));
-        setLikeCount(Array.isArray(post.likes) ? post.likes.length : 0);
+        setIsSaved(Array.isArray(user?.savedPosts) && user?.savedPosts?.includes(postId));
+        setLikeCount(Array.isArray(post?.likes) ? post?.likes?.length : 0);
         fetchLikedUsers();
         fetchComments();
         checkIfUnlocked();
         fetchUnlockedUsers();
-    }, [post.likes, currentUserId]);
+    }, [post?.likes, currentUserId]);
 
     const fetchLikedUsers = async () => {
         try {

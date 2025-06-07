@@ -28,7 +28,7 @@ const SavedPostCard = ({ post }) => {
                 />
                 <div className="ml-3">
                     <p
-                        className="text-sm font-semibold cursor-pointer"
+                        className="text-sm text-black font-semibold cursor-pointer"
                         onClick={() => navigate(`/user/profile/${postUserId}`)}
                     >
                         {firstName} {lastName}

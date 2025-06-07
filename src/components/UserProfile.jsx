@@ -80,15 +80,29 @@ const UserProfile = () => {
     }
   };  
 
+  const visitOtherProfile = async (profileOwnerId) => {
+    try{
+      await axios.post(`${BASE_URL}/profile/visit`, 
+        {
+          userId: profileOwnerId 
+        }, 
+        { withCredentials: true });
+    }catch(error) {
+      console.error("Failed to visit profile:", error);
+    }
+  }
+
+
   useEffect(() => {
     fetchUser();
     fetchPosts();
   }, [userId]);
 
   useEffect(() => {
-    if (user?._id && user._id !== loggedInUserId) {
+    if (user?._id && user?._id !== loggedInUserId) {
       checkIfUsersConnected();
       fetchConnectionStatus();
+      visitOtherProfile(user?._id); // Track profile visit
     }
   }, [user, loggedInUserId]);
 
