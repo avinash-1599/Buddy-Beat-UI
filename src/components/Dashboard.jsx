@@ -28,10 +28,6 @@ const Dashboard = () => {
   const membershipType = user?.membershipType;
 
   useEffect(() => {
-    // fetchDashboardCounts();
-    // fetchMaxLikedPost();
-    // fetchUsersWhoLikedAllPosts();
-    // fetchProfileVisitors();
     fetchDashboardData();
   }, []);
 
@@ -73,66 +69,11 @@ const Dashboard = () => {
         maxLikedPostRes.data && setMaxLikedPost(maxLikedPostRes.data?.post || {});
         likedAllUsersRes.data && setUsersWhoLikedAllPosts(likedAllUsersRes.data?.result || []);
         profileVisitorsRes.data && setProfileVisitors(profileVisitorsRes.data || []);
+        console.log("Dashboard data loaded successfully", counts, maxLikedPost, usersWhoLikedAllPosts, profileVisitors);
     } catch (err) {
       console.error("Dashboard load failed:", err);
     }
   };
-
-//   const fetchDashboardCounts = async () => {
-//     try {
-//       const response = await axios.get(`${BASE_URL}/dashboard/totalCounts`, {
-//         withCredentials: true,
-//       });
-      
-//       if (response?.data) {
-//         setCounts({
-//             totalPosts: response.data.totalPosts || 0,
-//             totalLockedPosts: response.data.totalLockedPosts || 0,
-//             totalStories: response.data.totalStories || 0,
-//             totalConnections: response.data.totalConnections || 0,
-//             totalRequests: response.data.totalRequests || 0,
-//             totalBlockedUsers: response.data.totalBlockedUsers || 0,
-//         });
-//       }
-//     } catch (error) {
-//       console.error("Error fetching dashboard counts:", error);
-//     }
-//   };
-
-//   const fetchMaxLikedPost = async () => {
-
-//     try {
-//       const response = await axios.get(`${BASE_URL}/dashboard/maxLikedPost`, {
-//         withCredentials: true,
-//       });
-//       setMaxLikedPost(response.data?.post || {});
-//     } catch (error) {
-//       console.error("Error fetching max liked post:", error);
-//     }
-//   }
-
-//   const fetchUsersWhoLikedAllPosts = async () => {
-//     try {
-//       const response = await axios.get(`${BASE_URL}/dashboard/usersWhoLikedAllPosts`, {
-//         withCredentials: true,
-//       });
-//       setUsersWhoLikedAllPosts(response.data?.result || []);
-//     } catch (error) {
-//       console.error("Error fetching users who liked all posts:", error);
-//     }
-//   }
-
-//     const fetchProfileVisitors = async () => {
-//         try {
-//             const response = await axios.get(`${BASE_URL}/dashboard/profileVisitors`, {
-//                 withCredentials: true,
-//         });
-//         console.log("Profile visitors response:", response.data);
-//             setProfileVisitors(response.data || []);
-//         } catch (error) {
-//             console.error("Error fetching profile viewers:", error);
-//         }
-//     }
 
     const toggleTime = (visitorId) => {
         setShowTime((prev) => ({
@@ -203,7 +144,7 @@ const Dashboard = () => {
         </div>
 
         {/* Users who viewed your profile recently */}
-        {isPremium && membershipType === "Gold" && (<div className="bg-gray-400 rounded-2xl shadow-lg p-6 mb-10">
+        {isPremium && membershipType === "Platinum" && (<div className="bg-gray-400 rounded-2xl shadow-lg p-6 mb-10">
           <h2 className="text-xl text-gray-800 font-semibold mb-4">Users Who Viewed Your Profile Recently</h2>
           <div className="max-h-80 overflow-y-auto pr-4">
           <ul className="space-y-2">
