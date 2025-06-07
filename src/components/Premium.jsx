@@ -45,7 +45,7 @@ const Premium = () => {
   const verifyPremiumUser = async () => {
     try {
       const res = await axios.get(BASE_URL + "/premium/verify", { withCredentials: true });
-      console.log("User premium verification response:", res.data);
+
       if (res.data?.isPremium) {
         setIsUserPremium(true);
         setUserMembershipType(res.data?.membershipType);

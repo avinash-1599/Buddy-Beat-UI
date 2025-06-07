@@ -19,7 +19,6 @@ const LocationTagger = () => {
         try {
 
             const res = await axios.get(`${BASE_URL}/api-key/${'locationIQ'}`, {withCredentials: true});
-            console.log("resolt-key", res.data);
 
           const locationRes = await axios.get(
             `https://us1.locationiq.com/v1/reverse?key=${res.data.data}&lat=${latitude}&lon=${longitude}&format=json`

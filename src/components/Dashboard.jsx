@@ -41,7 +41,6 @@ const Dashboard = () => {
   ];
 
   const fetchDashboardData = async () => {
-    const start = performance.now();
     try {
       const [
         countsRes,
@@ -55,9 +54,6 @@ const Dashboard = () => {
         axios.get(`${BASE_URL}/dashboard/profileVisitors`, { withCredentials: true })
       ]);
 
-      const end = performance.now();
-      console.log(`Dashboard data fetched in ${Math.round(end - start)}ms`);
-
       countsRes.data && setCounts({
         totalPosts: countsRes.data.totalPosts || 0,
         totalLockedPosts: countsRes.data.totalLockedPosts || 0,
@@ -69,7 +65,6 @@ const Dashboard = () => {
         maxLikedPostRes.data && setMaxLikedPost(maxLikedPostRes.data?.post || {});
         likedAllUsersRes.data && setUsersWhoLikedAllPosts(likedAllUsersRes.data?.result || []);
         profileVisitorsRes.data && setProfileVisitors(profileVisitorsRes.data || []);
-        console.log("Dashboard data loaded successfully", counts, maxLikedPost, usersWhoLikedAllPosts, profileVisitors);
     } catch (err) {
       console.error("Dashboard load failed:", err);
     }

@@ -93,7 +93,6 @@ const StoriesFeed = () => {
         const currentStoryId = currentGroup.stories[activeIndex]._id;
         const res = await axios.get(`${BASE_URL}/story/${currentStoryId}/viewers`, { withCredentials: true });
         const viewers = res.data;
-        console.log('Story viewers frontend:', viewers);
         setStoryViewers(viewers);
         setIsViewingViewers(true);
     } catch (err) {

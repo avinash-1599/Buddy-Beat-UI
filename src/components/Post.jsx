@@ -143,7 +143,6 @@ const Post = ({ post }) => {
             const { data } = await axios.post(`${BASE_URL}/post/validate-challenge/${postId}`,
                 { answer },
                 { withCredentials: true });
-                console.log("Challenge validation response:", data);
 
                 if (data?.isValidated) {
                     await axios.post(`${BASE_URL}/post/mark-unlocked/${postId}`, {}, { withCredentials: true });
