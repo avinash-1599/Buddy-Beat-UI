@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePostLikes } from "../utils/postSlice";
+import { removePost, updatePostLikes } from "../utils/postSlice";
 import { togglePostSave } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
+import { Trash } from "lucide-react";
 
 /* eslint-disable react/prop-types */
 const Post = ({ post }) => {
@@ -168,6 +169,20 @@ const Post = ({ post }) => {
             }
         };
 
+    const handleDeletePost = async () => {
+        try{
+            const confirmed = window.confirm("Are you sure you want to delete this post?");
+            if (!confirmed) return;
+            // Make API call to delete the post
+            await axios.delete(`${BASE_URL}/post/${postId}`, { withCredentials: true });
+            dispatch(removePost(postId));
+            navigate("/post/feed");
+        }catch(error) {
+            console.error("Error deleting post:", error);
+            alert("Failed to delete post.");
+        }
+    }
+
     const toggleLikedUsers = () => {
         setShowLikedUsers(!showLikedUsers);
     };
@@ -207,9 +222,17 @@ const Post = ({ post }) => {
                     )}
                 </div>
             </div>
-            <p className="text-xs text-gray-700 whitespace-nowrap">
-                {new Date(createdAt).toLocaleString()}
-            </p>
+            <div className="relative flex flex-col items-end h-12 justify-between">
+            {postUserId === currentUserId && (<button
+                onClick={handleDeletePost}
+                className="absolute top-0 right-0 text-red-500 hover:text-red-700 transition-colors"
+                >
+                <Trash className="w-6 h-6"></Trash>            
+            </button>)}
+                <p className="mt-auto text-xs text-gray-700 whitespace-nowrap">
+                    {new Date(createdAt).toLocaleString()}
+                </p>
+            </div>
             </div>
 
             {/* Post Content */}

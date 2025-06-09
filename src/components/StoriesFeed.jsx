@@ -6,7 +6,6 @@ import { BASE_URL } from '../utils/constants';
 import { useSelector } from 'react-redux';
 import { Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
@@ -277,31 +276,6 @@ const StoriesFeed = () => {
                 className="h-[70vh] w-auto max-w-full object-contain rounded-md"
                 />
             )}
-
-            {/* LEFT (Previous) Click Area */}
-            {/* <div
-                className="absolute left-0 top-0 h-full w-1/2 cursor-pointer"
-                onClick={() => {
-                if (activeIndex > 0) {
-                    setActiveIndex((prev) => prev - 1);
-                } else {
-                    closeModal();
-                }
-                }}
-            /> */}
-
-            {/* RIGHT (Next) Click Area */}
-            {/* <div
-                className="absolute right-0 top-0 h-full w-1/2 cursor-pointer"
-                onClick={() => {
-                const currentStories = groupedStories[activeUserId].stories;
-                if (activeIndex < currentStories.length - 1) {
-                    setActiveIndex((prev) => prev + 1);
-                } else {
-                    closeModal();
-                }
-                }}
-            /> */}
 
             {/* LEFT (Previous) Click Area */}
             <div className="absolute left-0 top-0 h-full w-1/2 pointer-events-none">
