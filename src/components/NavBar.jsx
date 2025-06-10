@@ -123,7 +123,7 @@ const NavBar = () => {
                             {isDropdownOpen && (
                                 <ul className="absolute right-0 mt-3 w-40 bg-gray-800 text-white rounded-md shadow-lg p-2">
                                     <li>
-                                        <Link to="/profile" className="block p-2 hover:bg-gray-700">Profile</Link>
+                                        <Link to="/profile" className="block p-2 hover:bg-gray-700">Update Profile</Link>
                                     </li>
                                     <li>
                                         <button onClick={handleLogout} className="w-full text-left p-2 hover:bg-gray-700">

@@ -36,7 +36,7 @@ const SideBar = ( {onClose}) => {
     { name: "Explore", icon: <UserSearchIcon />, path: "/explore" },
     { name: "Saved", icon: <Bookmark />, path: "/saved" },
     { type: "divider" },
-    { name: "Profile", icon: <User />, path: "/profile" },
+    { name: "Profile", icon: <User />, path: `/user/profile/${user._id}` },
     { name: "Requests", icon: <UsersIcon />, path: "/user-requests" },
     { name: "Connections", icon: <UsersRoundIcon />, path: "/connections" },
     { name: "Messages", icon: <MessageCircle />, path: "/messages" },
