@@ -109,7 +109,7 @@ return (
   
         <select
           value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+          onChange={(e) => setDuration(Number(e.target.value))}
           className="w-full p-2 rounded bg-gray-600 text-white"
         >
           <option value="" disabled hidden>Select duration</option>
