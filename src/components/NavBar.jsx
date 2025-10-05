@@ -98,7 +98,7 @@ const NavBar = () => {
                 {user && (
                     <>
                         <a
-                            href="http://localhost:5174"
+                            href="https://services.buddybeat.co.in"
                             className="px-2 py-1 rounded-xl bg-gradient-to-r from-gray-700 to-gray-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
                             >
                             Services
