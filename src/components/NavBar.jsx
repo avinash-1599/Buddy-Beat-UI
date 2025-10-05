@@ -97,6 +97,12 @@ const NavBar = () => {
             <div className="flex items-center space-x-5">
                 {user && (
                     <>
+                        <a
+                            href="http://localhost:5174"
+                            className="px-2 py-1 rounded-xl bg-gradient-to-r from-gray-700 to-gray-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
+                            >
+                            Services
+                        </a>             
                         <img
                             src="/home-icon.jpg"
                             alt="posts feed"
