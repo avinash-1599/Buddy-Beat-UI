@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 import BackButton from "./BackButton";
 import GlobalUserSearch from "./GlobalUserSearch";
+import { FRONTEND_SERVICES_URL } from "../utils/constants";
 
 const NavBar = () => {
     const user = useSelector((store) => store.user);
@@ -98,7 +99,7 @@ const NavBar = () => {
                 {user && (
                     <>
                         <a
-                            href="https://services.buddybeat.co.in"
+                            href={FRONTEND_SERVICES_URL}
                             className="px-2 py-1 rounded-xl bg-gradient-to-r from-gray-700 to-gray-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
                             >
                             Services
