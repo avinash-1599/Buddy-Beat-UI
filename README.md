@@ -1,4 +1,4 @@
-# Dev Tinder UI
+# Budy Beat UI
 
 - Create a Vite + React application
 - Remove unnecessary files and create hello world app
