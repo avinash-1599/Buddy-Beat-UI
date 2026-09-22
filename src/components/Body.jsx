@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 const animatedTexts = [
-    { text: "Welcome Back!", top: "15%", left: "7%", color: "text-purple-400" },
+    { text: "Welcome!", top: "15%", left: "7%", color: "text-purple-400" },
     { text: "Connect, Share and Vibe !", top: "25%", left: "70%", color: "text-blue-400" },
     { text: "🙋‍♂️🙋‍♀️", top: "45%", left: "80%", color: "text-blue-400" },
     { text: "To", top: "25%", left: "15%", color: "text-yellow-300" },
